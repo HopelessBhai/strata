@@ -70,6 +70,10 @@ fn texts(widget: &gtk::Widget, class: &str) -> Vec<String> {
         .collect()
 }
 
+fn origin(page: &gtk::Widget, row: &str) -> Vec<String> {
+    named(page, row).map_or_else(Vec::new, |row| texts(&row, "integration-origin"))
+}
+
 fn has_class(page: &gtk::Widget, name: &str, class: &str) -> bool {
     named(page, name).is_some_and(|widget| {
         descendants(&widget)
@@ -208,6 +212,10 @@ fn the_page_installs_updates_and_removes_catalog_entries() {
                 "expanded requirements stay open across a rebuild"
             );
             assert!(named(&page, "integration-example-update").is_none());
+            assert_eq!(
+                origin(&page, "integration-example"),
+                ["Installed via catalog"]
+            );
 
             let switch = |page: &gtk::Widget| {
                 named(page, "integration-example-enabled")
@@ -284,6 +292,10 @@ fn the_page_installs_updates_and_removes_catalog_entries() {
                     .filter_map(|widget| widget.downcast_ref::<gtk::Label>())
                     .any(|label| label.text() == "Handmade"),
                 "manual installations show their registered name"
+            );
+            assert_eq!(
+                origin(&page, "integration-handmade"),
+                ["Manually installed"]
             );
             click(&page, "integration-handmade-remove");
             wait_until("confirmation", || {

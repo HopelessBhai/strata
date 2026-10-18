@@ -629,6 +629,11 @@ impl Page {
             &entry.id,
             name,
             logo_tile(entry.icon_bytes(), entry.category),
+            if row.status == Status::Manual {
+                "Manually installed"
+            } else {
+                "Installed via catalog"
+            },
         );
         if update {
             let button = context.button(
@@ -672,6 +677,7 @@ impl Page {
             &installation.id,
             &installation.name,
             logo_tile(installation.icon.as_deref(), Category::Other),
+            "Manually installed",
         );
         context.toggle(installation.enabled);
         context.remove_button(Some(
@@ -685,6 +691,7 @@ impl Page {
         id: &str,
         name: &str,
         logo: gtk::Widget,
+        origin: &str,
     ) -> (gtk::Box, Rc<RowContext>) {
         let widget = gtk::Box::new(gtk::Orientation::Vertical, 6);
         widget.add_css_class("settings-option");
@@ -692,13 +699,20 @@ impl Page {
         widget.set_widget_name(&format!("integration-{id}"));
         let heading = gtk::Box::new(gtk::Orientation::Horizontal, 12);
         heading.append(&logo);
+        let copy = gtk::Box::new(gtk::Orientation::Vertical, 2);
+        copy.set_hexpand(true);
+        copy.set_valign(gtk::Align::Center);
         let title = gtk::Label::new(Some(name));
         title.set_xalign(0.0);
         title.set_wrap(true);
-        title.set_hexpand(true);
-        title.set_valign(gtk::Align::Center);
         title.add_css_class("settings-option-title");
-        heading.append(&title);
+        copy.append(&title);
+        let origin = gtk::Label::new(Some(&crate::i18n::tr(origin)));
+        origin.set_xalign(0.0);
+        origin.add_css_class("settings-option-description");
+        origin.add_css_class("integration-origin");
+        copy.append(&origin);
+        heading.append(&copy);
         let actions = gtk::Box::new(gtk::Orientation::Horizontal, 6);
         actions.add_css_class("integration-actions");
         actions.set_valign(gtk::Align::Center);
