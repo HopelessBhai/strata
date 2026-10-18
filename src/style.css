@@ -1288,6 +1288,10 @@ colorchooser button.circular:disabled {
   padding: 12px 16px;
 }
 
+.overlay-notice.status {
+  min-width: 0;
+}
+
 .overlay-notice-heading {
   font-weight: bold;
 }
@@ -2032,30 +2036,34 @@ menubutton.form-control:disabled > button {
 
 switch {
   background: @strata_muted;
-  border: 1px solid alpha(@strata_border, 0.72);
-  /* Track and thumb share one radius so they keep the same corner shape at
-     every roundness; GTK caps each at half its size. */
-  border-radius: 14px;
+  border: 1px solid alpha(@strata_border, 0.8);
+  /* The knob radius is 5/6 of the track's, its share of the track height, so
+     both reach a full circle at the same roundness and stay concentric. */
+  border-radius: 24px;
   box-shadow: none;
   min-height: 22px;
-  min-width: 40px;
+  min-width: 44px;
   transition: background 160ms ease-out, border-color 160ms ease-out;
 }
 
 switch:checked {
-  background: @strata_accent;
-  border-color: @strata_accent;
+  background: alpha(@strata_accent, 0.25);
+  border-color: alpha(@strata_accent, 0.65);
 }
 
-switch slider,
-switch:checked slider {
-  background: @strata_text;
+switch slider {
+  background: @strata_dim_text;
   border: none;
-  border-radius: 14px;
-  box-shadow: 0 1px 3px alpha(#000000, 0.4);
-  min-height: 18px;
-  min-width: 18px;
+  border-radius: 20px;
+  box-shadow: none;
+  margin: 1px;
+  min-height: 20px;
+  min-width: 20px;
   transition: background 160ms ease-out;
+}
+
+switch:checked slider {
+  background: @strata_accent;
 }
 
 .sidebar-shell,
@@ -2249,7 +2257,12 @@ scrollbar.horizontal > range > trough > slider {
   outline: 1px solid transparent;
   outline-offset: -1px;
   padding: 0;
-  transition: background 220ms ease-out, outline-color 220ms ease-out;
+  transition: background-color 220ms ease-out;
+}
+
+.sidebar > .sidebar-row,
+.sidebar > .sidebar-device {
+  margin: 0;
 }
 
 .sidebar-row:hover {
@@ -2283,26 +2296,64 @@ scrollbar.horizontal > range > trough > slider {
   opacity: 0.52;
 }
 
-.sidebar-row.reorderable:drop(active),
-.sidebar-row:drop(active),
-.sidebar-row.drop-destination {
-  background: alpha(@strata_highlight, 0.46);
-  outline-color: alpha(@strata_accent, 0.72);
-  transform: scale(1.02);
+.sidebar.sidebar-drag-active .sidebar-row {
+  transition: none;
 }
 
-.sidebar-pin-gap,
-.sidebar-pin-gap:drop(active) {
-  min-height: 4px;
-  margin: 0 8px;
+.sidebar.sidebar-inserting .sidebar-row,
+.sidebar.sidebar-inserting .sidebar-row:hover,
+.sidebar.sidebar-inserting .sidebar-device,
+.sidebar.sidebar-inserting .sidebar-device:hover {
+  background-color: transparent;
+}
+
+.sidebar.sidebar-drag-active .sidebar-row:focus:not(.drop-destination),
+.sidebar.sidebar-drag-active .sidebar-device.focused {
+  outline-color: transparent;
+}
+
+.sidebar-row.drop-destination,
+.sidebar-row.drop-destination:hover {
+  background: alpha(@strata_highlight, 0.46);
+  outline-color: alpha(@strata_accent, 0.72);
+  transform: none;
+  transition: none;
+}
+
+.sidebar-row.file-drop-zone:drop(active) {
+  box-shadow: none;
+}
+
+.sidebar-row.reorder-before,
+.sidebar-row.reorder-before:drop(active),
+.sidebar-row.reorder-after,
+.sidebar-row.reorder-after:drop(active) {
+  background: transparent;
+  box-shadow: none;
+  outline-color: transparent;
+  transform: none;
+  transition: none;
+}
+
+.sidebar-row-gap,
+.sidebar-row-gap:drop(active) {
+  min-height: 2px;
+  margin: 0;
   background: transparent;
   outline: none;
   box-shadow: none;
 }
 
-.sidebar-pin-gap.eligible,
-.sidebar-pin-gap.eligible:drop(active) {
-  background-image: linear-gradient(to bottom, transparent 33%, @strata_accent 33%, @strata_accent 66%, transparent 66%);
+.sidebar-pin-gap.empty {
+  min-height: 8px;
+}
+
+.sidebar-row-gap.eligible,
+.sidebar-row-gap.eligible:drop(active) {
+  background-image: linear-gradient(@strata_accent, @strata_accent);
+  background-size: calc(100% - 8px) 2px;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .sidebar-row:focus {
@@ -5574,6 +5625,15 @@ entry.theme-search {
   background: transparent;
 }
 
+/* The default theme paints the overshoot indication with a near-black
+   gradient; inside the settings sheet it reads as artifacting. */
+.settings-dialog scrolledwindow overshoot,
+.settings-dialog scrolledwindow undershoot {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
 
 /* Alternate browser presentations */
 .mode-icons,
@@ -6077,6 +6137,119 @@ two-column presentation. */
   margin: -6px 4px 12px;
 }
 
+.settings-diagnostics-page .menu-heading {
+  font-size: 0.875em;
+  letter-spacing: 1.5px;
+  padding: 0;
+  margin: 36px 4px 12px;
+}
+
+.diagnostics-actions {
+  margin-top: 10px;
+}
+
+.diagnostics-command > entry.preview-command-entry {
+  padding-right: 72px;
+}
+
+.diagnostics-command-status.error {
+  color: @strata_danger;
+}
+
+.diagnostics-summary {
+  color: @strata_dim_text;
+  margin: 18px 4px 0;
+}
+
+.diagnostics-row {
+  min-height: 42px;
+  padding: 9px 18px;
+}
+
+.settings-group .diagnostics-row + .diagnostics-row {
+  border-top: 1px solid alpha(@strata_border, 0.55);
+}
+
+.diagnostics-status {
+  margin-top: 1px;
+}
+
+.diagnostics-message.problem {
+  color: @strata_danger;
+}
+
+.diagnostics-detail {
+  color: @strata_dim_text;
+  font-family: monospace;
+  font-size: 0.85em;
+}
+
+.diagnostics-fix {
+  margin-top: 4px;
+}
+
+.integration-row {
+  padding: 12px 18px;
+}
+
+.settings-group .integration-row + .integration-row {
+  border-top: 1px solid alpha(@strata_border, 0.55);
+}
+
+.integration-logo {
+  margin-right: 2px;
+}
+
+.integration-status {
+  border: 1px solid alpha(@strata_border, 0.4);
+  border-radius: 4px;
+  color: @strata_dim_text;
+  font-size: 0.8em;
+  padding: 1px 6px;
+}
+
+.integration-status.installed {
+  border-color: alpha(@strata_accent, 0.5);
+  color: @strata_accent;
+}
+
+.integration-status.update {
+  border-color: alpha(@strata_highlight, 0.6);
+  color: @strata_text;
+}
+
+.integration-requirement-list {
+  margin-top: 2px;
+}
+
+.integration-requirement.missing label {
+  color: @strata_danger;
+}
+
+.integration-message.error {
+  color: @strata_danger;
+}
+
+.integration-confirmation {
+  margin-top: 4px;
+}
+
+.integration-separator {
+  background: alpha(@strata_border, 0.55);
+  margin: 3px 2px;
+  min-width: 1px;
+}
+
+.integration-actions .settings-action-button.borderless,
+.integration-actions .settings-action-button.danger.borderless:focus-visible {
+  border-color: transparent;
+}
+
+.integration-actions .settings-action-button.danger.borderless:hover,
+.integration-actions .settings-action-button.danger.borderless:active {
+  border-color: transparent;
+}
+
 .settings-group {
   background: mix(@strata_bg, @strata_muted, 0.25);
   border: 1px solid alpha(@strata_border, 0.55);
@@ -6149,31 +6322,6 @@ two-column presentation. */
 .settings-indent {
   margin-right: 4px;
   opacity: 0.7;
-}
-
-.settings-dialog switch {
-  min-width: 42px;
-  min-height: 22px;
-  border-radius: 20px;
-  background: @strata_muted;
-  border: 1px solid alpha(@strata_border, 0.8);
-}
-
-.settings-dialog switch slider {
-  min-width: 18px;
-  min-height: 18px;
-  margin: 1px;
-  background: @strata_dim_text;
-  box-shadow: none;
-}
-
-.settings-dialog switch:checked {
-  background: alpha(@strata_accent, 0.25);
-  border-color: alpha(@strata_accent, 0.65);
-}
-
-.settings-dialog switch:checked slider {
-  background: @strata_accent;
 }
 
 .settings-dialog .settings-option:disabled,
@@ -6492,7 +6640,7 @@ two-column presentation. */
 .settings-dialog .settings-close image,
 .settings-dialog .settings-indent,
 .settings-dialog .about-repository image {
-  -gtk-icon-filter: saturate(0) opacity(0.65);
+  -gtk-icon-filter: opacity(0.65);
 }
 
 .settings-dialog .settings-nav-active image {
@@ -6560,7 +6708,7 @@ two-column presentation. */
 
 .release-notes-toggle image {
   transform: rotate(90deg);
-  -gtk-icon-filter: saturate(0) opacity(0.65);
+  -gtk-icon-filter: opacity(0.65);
 }
 
 .release-notes-toggle.expanded image {
@@ -6582,7 +6730,7 @@ two-column presentation. */
 }
 
 .settings-search-icon {
-  -gtk-icon-filter: saturate(0) opacity(0.65);
+  -gtk-icon-filter: opacity(0.65);
 }
 
 .settings-dialog .settings-library-toolbar .menu-heading {
@@ -6594,6 +6742,16 @@ two-column presentation. */
   min-height: 36px;
   padding-top: 10px;
   padding-bottom: 10px;
+}
+
+.settings-dialog .diagnostics-system {
+  padding: 8px 0;
+}
+
+.settings-dialog .diagnostics-system .about-detail-row {
+  min-height: 0;
+  padding: 3px 18px;
+  border: none;
 }
 
 .settings-global-search {
@@ -6955,25 +7113,7 @@ popover.settings-action-library > contents {
 }
 
 .settings-action-dialog .action-dialog-actions {
-  background: alpha(@strata_highlight, 0.12);
   padding: 14px 22px;
-}
-
-.settings-action-dialog .action-dialog-cancel {
-  border-color: transparent;
-}
-
-.settings-action-dialog .action-dialog-confirm {
-  background: @strata_accent;
-  color: @strata_bg;
-}
-
-.settings-action-dialog .action-dialog-confirm:hover {
-  background: mix(@strata_accent, @strata_text, 0.12);
-}
-
-.settings-action-dialog .action-dialog-confirm:active {
-  background: mix(@strata_accent, @strata_bg, 0.15);
 }
 
 .settings-action-tabs,
@@ -6985,7 +7125,7 @@ popover.settings-action-library > contents {
 }
 
 .settings-action-tabs > header {
-  padding: 0 22px;
+  padding: 0 16px;
   border-bottom: 1px solid alpha(@strata_border, 0.35);
 }
 
@@ -6994,33 +7134,34 @@ popover.settings-action-library > contents {
   margin: 0;
 }
 
+/* The tab's side padding gives the focus ring room around the text; the
+   label draws the indicator so it stays as wide as the text. */
 .settings-action-tabs > header > tabs > tab {
   background: transparent;
   border: none;
-  border-bottom: 2px solid transparent;
   border-radius: 0;
   box-shadow: none;
-  color: @strata_dim_text;
-  margin: 0 20px 0 0;
+  color: @strata_text;
+  margin: 0 8px 0 0;
   min-height: 36px;
-  padding: 0;
-  outline-offset: -4px;
+  outline-offset: -2px;
+  padding: 0 6px;
 }
 
 .settings-action-tabs > header > tabs > tab label {
-  font-size: 0.85em;
+  border-bottom: 2px solid transparent;
   font-weight: 600;
-  letter-spacing: 1px;
-  text-transform: uppercase;
+  opacity: 0.55;
+  transition: opacity 160ms ease-out;
 }
 
-.settings-action-tabs > header > tabs > tab:hover {
-  color: @strata_text;
-  background: alpha(@strata_highlight, 0.25);
+.settings-action-tabs > header > tabs > tab:hover label,
+.settings-action-tabs > header > tabs > tab:focus-visible label,
+.settings-action-tabs > header > tabs > tab:checked label {
+  opacity: 1;
 }
 
-.settings-action-tabs > header > tabs > tab:checked {
-  color: @strata_text;
+.settings-action-tabs > header > tabs > tab:checked label {
   border-bottom-color: @strata_accent;
 }
 

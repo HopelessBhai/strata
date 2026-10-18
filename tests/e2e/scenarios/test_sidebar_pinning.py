@@ -1,6 +1,7 @@
 # SPDX-License-Identifier: MIT
 
 import sys
+import time
 from pathlib import Path
 
 import pytest
@@ -23,6 +24,24 @@ def pin_gap(strata, index=0):
     )[index]
 
 
+def drag_onto_pin_gap(strata, start, index=0, *, modifiers=()):
+    """Hold a drag over a Pinned gap; the caller releases the button.
+
+    With nothing pinned the section appears only once a file drag reaches the
+    sidebar, so the drag first enters blank sidebar space below the rows.
+    """
+
+    home = strata.sidebar_button("Home").screen_bounds()
+    window = strata.window_bounds()
+    strata.pointer.drag_points(
+        start,
+        (home.center[0], window.y + window.height - 80),
+        release=False,
+        modifiers=modifiers,
+    )
+    strata.pointer.move_to(*pin_gap(strata, index).screen_bounds().center)
+
+
 def drag_to_pin(strata, names, index=0, *, modifiers=()):
     directory = strata.fixture.root.name
     strata.select_entry(names[0], directory)
@@ -32,13 +51,15 @@ def drag_to_pin(strata, names, index=0, *, modifiers=()):
         lambda: set(strata.selected_names(directory)) == set(names),
         "the drag selection in its source pane",
     )
-    strata.pointer.drag_points(
-        strata.pointer.drag_origin(strata.entry(names[0], directory)),
-        pin_gap(strata, index).screen_bounds().center,
-        release=False,
-        modifiers=modifiers,
-    )
-    strata.pointer.connection.button(1, False)
+    try:
+        drag_onto_pin_gap(
+            strata,
+            strata.pointer.drag_origin(strata.entry(names[0], directory)),
+            index,
+            modifiers=modifiers,
+        )
+    finally:
+        strata.pointer.connection.button(1, False)
 
 
 @pytest.mark.parametrize("mode", ALL_MODES)
@@ -127,7 +148,10 @@ def test_foreign_folder_drags_validate_the_entire_selection_before_pinning(strat
             lambda: tree.desktop().find(role="button", name="Foreign file selection"),
             "the foreign drag source",
         )
-        strata.pointer.drag(button, pin_gap(strata))
+        try:
+            drag_onto_pin_gap(strata, strata.pointer.drag_origin(button))
+        finally:
+            strata.pointer.connection.button(1, False)
         strata.wait(
             lambda: tree.desktop().find(role="button", name="Foreign drag finished"),
             "external validation and the drop protocol to finish",
@@ -137,6 +161,66 @@ def test_foreign_folder_drags_validate_the_entire_selection_before_pinning(strat
         assert folder.is_dir() and alias.is_symlink()
     finally:
         terminate(source.popen)
+
+
+@pytest.mark.parametrize("mode", ALL_MODES)
+@pytest.mark.preferences(reduce_motion=False)
+def test_leaving_spring_loaded_sidebar_rows_for_a_gap_keeps_the_pin_intent(strata, mode):
+    path = strata.environment.config_home / "gtk-3.0" / "bookmarks"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    first = strata.fixture.path("documents")
+    second = strata.fixture.path("pictures")
+    source = strata.fixture.path("archive")
+    expected = [f"{first.as_uri()} First", f"{second.as_uri()} Second"]
+    path.write_text("\n".join(expected) + "\n")
+    settings = strata.environment.config_home / "gtk-4.0" / "settings.ini"
+    settings.write_text(settings.read_text().replace("gtk-enable-animations=false", "gtk-enable-animations=true"))
+    strata.application.stop()
+    strata.application.start()
+    strata.pointer.drag_points(
+        strata.pointer.drag_origin(strata.entry(source.name)),
+        strata.sidebar_button("First").screen_bounds().center,
+        release=False,
+    )
+    try:
+        strata.wait_for_directory(first.name)
+        strata.pointer.move_to(*strata.sidebar_button("Second").screen_bounds().center)
+        strata.pointer.move_to(*pin_gap(strata, 1).screen_bounds().center)
+        deadline = time.monotonic() + 0.9
+        while time.monotonic() < deadline:
+            assert strata.current_directory() == first.name, "a departed row must not spring-load later"
+            time.sleep(0.05)
+    finally:
+        strata.pointer.connection.button(1, False)
+    expected.insert(1, f"{source.as_uri()} {source.name}")
+    strata.wait(lambda: bookmarks(strata) == expected, "the gap to pin rather than transfer the folder")
+    assert source.is_dir()
+    assert not (first / source.name).exists()
+    assert not (second / source.name).exists()
+
+
+@pytest.mark.parametrize("mode", ALL_MODES)
+def test_folder_pin_drag_survives_sidebar_shrinking_and_expanding(strata, mode):
+    expected = []
+    for name, width in [("archive", 400), ("documents", 1200)]:
+        source = strata.fixture.path(name)
+        try:
+            drag_onto_pin_gap(strata, strata.pointer.drag_origin(strata.entry(name)), -1)
+            bounds = strata.window.window_bounds()
+            strata.pointer.connection.resize_surface(
+                bounds.width, bounds.height, width, bounds.height
+            )
+            # Let the native configure and sidebar fit update run before retargeting.
+            time.sleep(0.5)
+            strata.pointer.move_to(*pin_gap(strata, -1).screen_bounds().center)
+        finally:
+            strata.pointer.connection.button(1, False)
+        expected.append(f"{source.as_uri()} {name}")
+        strata.wait(lambda: bookmarks(strata) == expected, "the resized drag to pin its folder")
+        assert source.is_dir(), "resizing a pin drag must not move its source"
+    strata.application.stop()
+    strata.application.start()
+    assert bookmarks(strata) == expected
 
 
 def test_pinned_folder_rows_remain_transfer_targets_and_remote_pins_have_gaps(strata):

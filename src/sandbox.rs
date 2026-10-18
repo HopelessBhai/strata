@@ -26,6 +26,7 @@ pub(crate) mod browser;
 pub(crate) mod media;
 pub(crate) mod metadata;
 pub(crate) mod raw_metadata;
+pub(crate) mod runtime;
 
 const WALL_TIME_LIMIT: Duration = Duration::from_secs(12);
 const ADDRESS_SPACE_LIMIT_BYTES: u64 = 2 * 1024 * 1024 * 1024;
@@ -691,7 +692,22 @@ fn wait_for_renderer_reporting(
     }
 }
 
+/// Resolves a helper tool the way the sandbox's `PATH` does. The sandbox root
+/// is mounted at its host path, so the host file is the one helpers run.
+pub(crate) fn sandbox_tool(name: &str) -> Option<PathBuf> {
+    use std::os::unix::fs::PermissionsExt;
+    runtime::current()
+        .tool_directories()
+        .map(|directory| directory.join(name))
+        .find(|candidate| {
+            fs::metadata(candidate).is_ok_and(|metadata| {
+                metadata.is_file() && metadata.permissions().mode() & 0o111 != 0
+            })
+        })
+}
+
 fn runtime_command(bwrap: &Path, needs_media_libraries: bool) -> Command {
+    let runtime = runtime::current();
     let mut command = Command::new(bwrap);
     command.args([
         "--unshare-all",
@@ -700,7 +716,7 @@ fn runtime_command(bwrap: &Path, needs_media_libraries: bool) -> Command {
         "--clearenv",
         "--setenv",
         "PATH",
-        option_env!("STRATA_SANDBOX_PATH").unwrap_or("/usr/bin"),
+        runtime.path.as_str(),
         "--setenv",
         "HOME",
         "/nonexistent",
@@ -720,8 +736,8 @@ fn runtime_command(bwrap: &Path, needs_media_libraries: bool) -> Command {
         "--dir",
         "/etc",
         "--ro-bind",
-        option_env!("STRATA_SANDBOX_ROOT").unwrap_or("/usr"),
-        option_env!("STRATA_SANDBOX_ROOT").unwrap_or("/usr"),
+        runtime.root.as_str(),
+        runtime.root.as_str(),
         "--ro-bind-try",
         "/lib",
         "/lib",
@@ -744,7 +760,7 @@ fn runtime_command(bwrap: &Path, needs_media_libraries: bool) -> Command {
         "/etc/ImageMagick-6",
         "/etc/ImageMagick-6",
     ]);
-    if let Some(loaders) = option_env!("STRATA_SANDBOX_GDK_PIXBUF_MODULE_FILE") {
+    if let Some(loaders) = &runtime.gdk_pixbuf_module_file {
         command.args(["--setenv", "GDK_PIXBUF_MODULE_FILE", loaders]);
     }
     if needs_media_libraries {
@@ -816,7 +832,7 @@ fn sandbox_command(
     command.arg("--");
     if !operation.is_media() {
         command
-            .arg(option_env!("STRATA_SANDBOX_PRLIMIT").unwrap_or("/usr/bin/prlimit"))
+            .arg(&runtime::current().prlimit)
             .arg(format!("--as={ADDRESS_SPACE_LIMIT_BYTES}"))
             .arg("--cpu=10")
             .arg(format!(
