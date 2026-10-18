@@ -62,7 +62,6 @@
   "%{message}\nDo not unplug it.": "%{message}\n取り外さないでください。",
   "%{minutes}m %{seconds}s": "%{minutes}分%{seconds}秒",
   "%{mode} (experimental feature, under active development)": "%{mode}（開発中の実験的機能）",
-  "%{names} not found": "%{names} が見つかりません",
   "%{name} changed while it was being copied": "%{name}はコピー中に変更されました",
   "%{name} changed while it was being copied: %{error}": "%{name}はコピー中に変更されました: %{error}",
   "%{name} changed while it was being deleted": "%{name}は削除中に変更されました",

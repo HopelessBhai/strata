@@ -70,10 +70,6 @@ fn texts(widget: &gtk::Widget, class: &str) -> Vec<String> {
         .collect()
 }
 
-fn tags(page: &gtk::Widget, row: &str) -> Vec<String> {
-    named(page, row).map_or_else(Vec::new, |row| texts(&row, "integration-tag"))
-}
-
 fn has_class(page: &gtk::Widget, name: &str, class: &str) -> bool {
     named(page, name).is_some_and(|widget| {
         descendants(&widget)
@@ -161,10 +157,10 @@ fn the_page_installs_updates_and_removes_catalog_entries() {
                 named(&page, "integration-example").is_none(),
                 "nothing is listed as installed yet"
             );
-            wait_until("requirement summary", || {
-                named(&page, "integration-example-requirements")
-                    .is_some_and(|toggle| texts(&toggle, "missing") == ["example-daemon not found"])
+            wait_until("requirement status", || {
+                has_class(&page, "integration-example-requirements", "missing")
             });
+            assert!(!has_class(&page, "integration-example-requirements", "met"));
             let chips: Vec<(bool, bool)> = descendants(&page)
                 .iter()
                 .filter(|widget| widget.has_css_class("integration-requirement"))
@@ -211,7 +207,6 @@ fn the_page_installs_updates_and_removes_catalog_entries() {
                 expanded(&page),
                 "expanded requirements stay open across a rebuild"
             );
-            assert!(tags(&page, "integration-example").is_empty());
             assert!(named(&page, "integration-example-update").is_none());
 
             let switch = |page: &gtk::Widget| {
@@ -234,12 +229,13 @@ fn the_page_installs_updates_and_removes_catalog_entries() {
             catalog.replace(vec![example(b"#!/bin/sh\nexec cat\n")]);
             remap(&window, &page);
             wait_until("update offered", || {
-                tags(&page, "integration-example") == ["Update available"]
+                named(&page, "integration-example-update").is_some()
             });
             fs::write(root.join("example/provider.sh"), b"edited").expect("edit");
+            let stale = named(&page, "integration-example").expect("installed row");
             remap(&window, &page);
-            wait_until("local edit detected", || {
-                tags(&page, "integration-example") == ["Update available", "Modified locally"]
+            wait_until("rescanned after the edit", || {
+                named(&page, "integration-example").is_some_and(|row| row != stale)
             });
             click(&page, "integration-example-update");
             wait_until("confirmation", || {
@@ -252,8 +248,8 @@ fn the_page_installs_updates_and_removes_catalog_entries() {
             );
             click(&page, "integration-example-confirm");
             wait_until("updated", || {
-                named(&page, "integration-example-update").is_none()
-                    && tags(&page, "integration-example").is_empty()
+                named(&page, "integration-example").is_some()
+                    && named(&page, "integration-example-update").is_none()
             });
             assert_eq!(
                 fs::read(root.join("example/provider.sh")).expect("script"),
@@ -282,7 +278,6 @@ fn the_page_installs_updates_and_removes_catalog_entries() {
             wait_until("requirements checked again", || {
                 checks.load(Ordering::SeqCst) == 2
             });
-            assert_eq!(tags(&page, "integration-handmade"), ["Manual"]);
             assert!(
                 descendants(&page)
                     .iter()
@@ -309,9 +304,9 @@ fn the_page_installs_updates_and_removes_catalog_entries() {
 }
 
 #[test]
-fn the_catalog_filters_by_category_and_search() {
+fn the_catalog_filters_by_category() {
     crate::test_support::gtk_test(
-        "ui::settings::integrations::tests::the_catalog_filters_by_category_and_search",
+        "ui::settings::integrations::tests::the_catalog_filters_by_category",
         || {
             let config = tempfile::tempdir().expect("config");
             let checks = Arc::new(AtomicUsize::new(0));
@@ -349,19 +344,8 @@ fn the_catalog_filters_by_category_and_search() {
                 shown(&page, "integration-phone-card") && !shown(&page, "integration-example-card")
             });
             chip("All").set_active(true);
-            let search = descendants(&page)
-                .into_iter()
-                .filter(|widget| widget.has_css_class("settings-search"))
-                .find_map(|widget| widget.downcast::<gtk::Entry>().ok())
-                .expect("catalog search");
-            search.set_text("CLOUD");
-            wait_until("search narrows", || {
-                shown(&page, "integration-example-card") && !shown(&page, "integration-phone-card")
-            });
-            search.set_text("nothing like this");
-            let message = crate::i18n::tr("No integrations match your search.");
-            wait_until("no matches", || {
-                texts(&page, "integration-empty") == [message.clone()]
+            wait_until("every card", || {
+                shown(&page, "integration-example-card") && shown(&page, "integration-phone-card")
             });
             window.destroy();
         },

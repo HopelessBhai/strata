@@ -6183,6 +6183,14 @@ two-column presentation. */
   border-top: 1px solid alpha(@strata_border, 0.55);
 }
 
+.integration-heading {
+  color: @strata_dim_text;
+  font-size: 0.875em;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  margin: 0 4px;
+}
+
 .integration-count,
 .integration-filter-count {
   color: @strata_dim_text;
@@ -6204,14 +6212,6 @@ two-column presentation. */
   background: alpha(@strata_bg, 0.55);
   border: 1px solid alpha(@strata_border, 0.55);
   border-radius: 8px;
-}
-
-.integration-tag {
-  border: 1px solid alpha(@strata_border, 0.55);
-  border-radius: 4px;
-  color: @strata_dim_text;
-  font-size: 0.75em;
-  padding: 1px 6px;
 }
 
 .integration-card {
@@ -6249,10 +6249,6 @@ two-column presentation. */
 
 .integration-requirements-toggle:hover {
   background: alpha(@strata_accent, 0.08);
-}
-
-.integration-requirements-toggle label.missing {
-  color: @strata_danger;
 }
 
 .integration-requirements {
@@ -6758,13 +6754,13 @@ two-column presentation. */
 }
 
 .release-notes-toggle image,
-.integration-requirements-toggle image {
+.integration-requirements-toggle .integration-chevron {
   transform: rotate(90deg);
   -gtk-icon-filter: opacity(0.65);
 }
 
 .release-notes-toggle.expanded image,
-.integration-requirements-toggle.expanded image {
+.integration-requirements-toggle.expanded .integration-chevron {
   transform: rotate(270deg);
 }
 

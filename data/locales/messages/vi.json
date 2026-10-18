@@ -62,7 +62,6 @@
   "%{message}\nDo not unplug it.": "%{message}\nĐừng rút ổ ra.",
   "%{minutes}m %{seconds}s": "%{minutes} phút %{seconds} giây",
   "%{mode} (experimental feature, under active development)": "%{mode} (tính năng thử nghiệm, đang được tích cực phát triển)",
-  "%{names} not found": "Không tìm thấy %{names}",
   "%{name} changed while it was being copied": "%{name} đã thay đổi trong khi đang sao chép",
   "%{name} changed while it was being copied: %{error}": "%{name} đã thay đổi trong khi đang sao chép: %{error}",
   "%{name} changed while it was being deleted": "%{name} đã thay đổi trong khi đang xóa",

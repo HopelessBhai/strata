@@ -62,7 +62,6 @@
   "%{message}\nDo not unplug it.": "%{message}\nNe le débranchez pas.",
   "%{minutes}m %{seconds}s": "%{minutes} min %{seconds} s",
   "%{mode} (experimental feature, under active development)": "%{mode} (fonction expérimentale, en cours de développement)",
-  "%{names} not found": "Introuvable : %{names}",
   "%{name} changed while it was being copied": "%{name} a changé pendant la copie",
   "%{name} changed while it was being copied: %{error}": "%{name} a changé pendant la copie : %{error}",
   "%{name} changed while it was being deleted": "%{name} a changé pendant la suppression",

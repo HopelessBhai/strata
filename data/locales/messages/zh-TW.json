@@ -61,7 +61,6 @@
   "%{message}\nDo not unplug it.": "%{message}\n請勿拔除。",
   "%{minutes}m %{seconds}s": "%{minutes}分%{seconds}秒",
   "%{mode} (experimental feature, under active development)": "%{mode}（實驗功能，開發中）",
-  "%{names} not found": "找不到 %{names}",
   "%{name} changed while it was being copied": "%{name} 在複製時已變更",
   "%{name} changed while it was being copied: %{error}": "%{name} 在複製時已變更：%{error}",
   "%{name} changed while it was being deleted": "%{name} 在刪除時已變更",

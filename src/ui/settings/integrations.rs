@@ -97,9 +97,6 @@ pub(super) fn integrations_page_with(source: Source) -> gtk::Widget {
     let (heading, count) = counted_heading("CATALOG");
     heading.set_hexpand(true);
     toolbar.append(&heading);
-    let (search_overlay, search_entry, clear_search) = super::search_field("Search catalog…");
-    search_entry.add_css_class("theme-search");
-    toolbar.append(&search_overlay);
     content.append(&toolbar);
     let filters = super::wrap::WrapRow::new(6);
     filters.add_css_class("integration-filters");
@@ -116,7 +113,9 @@ pub(super) fn integrations_page_with(source: Source) -> gtk::Widget {
     grid.add_css_class("integration-grid");
     search::tag(&grid, TITLE);
     content.append(&grid);
-    let empty = gtk::Label::new(None);
+    let empty = gtk::Label::new(Some(&crate::i18n::tr(
+        "No integrations are bundled with this build.",
+    )));
     empty.set_xalign(0.0);
     empty.set_wrap(true);
     empty.add_css_class("settings-section-description");
@@ -145,14 +144,6 @@ pub(super) fn integrations_page_with(source: Source) -> gtk::Widget {
         manager: PackageManager::detect(),
         generation: Cell::new(0),
     });
-    let searching = Rc::downgrade(&page);
-    search_entry.connect_changed(move |entry| {
-        clear_search.set_visible(!entry.text().is_empty());
-        if let Some(page) = searching.upgrade() {
-            page.filter.query.replace(entry.text().to_lowercase());
-            page.apply_filter();
-        }
-    });
     let refresh = icon_label_button(icons::REFRESH, "Refresh");
     refresh.set_widget_name("integrations-refresh");
     let refreshing = Rc::downgrade(&page);
@@ -176,24 +167,19 @@ pub(super) fn integrations_page_with(source: Source) -> gtk::Widget {
     scrollable_page(&content, None)
 }
 
-/// The catalog's category and search filters; cards are keyed by widget name.
+/// The catalog's category filter; cards are keyed by widget name.
 #[derive(Default)]
 struct Filter {
     category: Cell<Option<Category>>,
-    query: RefCell<String>,
-    cards: RefCell<HashMap<String, (Category, String)>>,
+    cards: RefCell<HashMap<String, Category>>,
 }
 
 impl Filter {
     fn matches(&self, card: &str) -> bool {
-        let cards = self.cards.borrow();
-        let Some((category, text)) = cards.get(card) else {
-            return true;
-        };
+        let category = self.cards.borrow().get(card).copied();
         self.category
             .get()
-            .is_none_or(|selected| selected == *category)
-            && text.contains(self.query.borrow().as_str())
+            .is_none_or(|selected| category.is_none_or(|category| category == selected))
     }
 }
 
@@ -318,15 +304,7 @@ impl Page {
         for row in rows {
             let name = crate::i18n::tr(&row.entry.name);
             let card = self.catalog_card(row, &name, &heights);
-            let text = [
-                name.as_str(),
-                &crate::i18n::tr(&row.entry.description),
-                &crate::i18n::tr(category_label(row.entry.category)),
-                &row.entry.id,
-            ]
-            .join("\n")
-            .to_lowercase();
-            cards.insert(card.widget_name().to_string(), (row.entry.category, text));
+            cards.insert(card.widget_name().to_string(), row.entry.category);
             self.grid.append(&card);
         }
         let mut child = self.grid.first_child();
@@ -345,7 +323,8 @@ impl Page {
             self.filter.category.set(None);
         }
         self.show_filters(rows);
-        self.apply_filter();
+        self.grid.invalidate_filter();
+        self.empty.set_visible(rows.is_empty());
     }
 
     fn show_filters(self: &Rc<Self>, rows: &[Row]) {
@@ -390,23 +369,11 @@ impl Page {
                     && chip.is_active()
                 {
                     page.filter.category.set(category);
-                    page.apply_filter();
+                    page.grid.invalidate_filter();
                 }
             });
             self.filters.append(&chip);
         }
-    }
-
-    fn apply_filter(&self) {
-        self.grid.invalidate_filter();
-        let cards = self.filter.cards.borrow();
-        let any = cards.keys().any(|card| self.filter.matches(card));
-        self.empty.set_text(&crate::i18n::tr(if cards.is_empty() {
-            "No integrations are bundled with this build."
-        } else {
-            "No integrations match your search."
-        }));
-        self.empty.set_visible(!any);
     }
 
     fn check(self: &Rc<Self>, entries: Vec<Entry>) {
@@ -461,9 +428,6 @@ impl Page {
         description.set_lines(2);
         description.set_ellipsize(gtk::pango::EllipsizeMode::End);
         copy.append(&description);
-        let tags = gtk::Box::new(gtk::Orientation::Horizontal, 6);
-        tags.append(&tag(category_label(entry.category)));
-        copy.append(&tags);
         let message = note("");
         message.add_css_class("integration-message");
         message.set_visible(false);
@@ -502,28 +466,26 @@ impl Page {
     fn requirements_section(self: &Rc<Self>, entry: &Entry, name: &str) -> gtk::Box {
         let section = gtk::Box::new(gtk::Orientation::Vertical, 0);
         let results = self.requirements.borrow().get(&entry.id).cloned();
-        let missing: Vec<String> = results
-            .iter()
-            .flatten()
-            .filter(|result| !result.satisfied)
-            .map(|result| result.requirement.label().to_owned())
-            .collect();
+        let met = results
+            .as_ref()
+            .map(|results| results.iter().all(|result| result.satisfied));
         let expanded = self.expanded.borrow().contains(&entry.id);
         let heading = gtk::Box::new(gtk::Orientation::Horizontal, 6);
         let chevron = assets::primary_icon(icons::CHEVRON_RIGHT, 14);
+        chevron.add_css_class("integration-chevron");
         heading.append(&chevron);
         let title = gtk::Label::new(None);
         title.add_css_class("settings-option-description");
         heading.append(&title);
-        let separator = gtk::Label::new(Some("·"));
-        separator.add_css_class("settings-option-description");
-        heading.append(&separator);
-        let summary = gtk::Label::new(None);
-        summary.set_xalign(0.0);
-        summary.set_ellipsize(gtk::pango::EllipsizeMode::End);
-        summary.set_max_width_chars(CARD_CHARS);
-        summary.add_css_class("settings-option-description");
-        heading.append(&summary);
+        if let Some(met) = met {
+            let status = if met {
+                assets::primary_icon(icons::CIRCLE_CHECK, 14)
+            } else {
+                assets::danger_icon(icons::CIRCLE_X, 14)
+            };
+            status.add_css_class(if met { "met" } else { "missing" });
+            heading.append(&status);
+        }
         let toggle = gtk::Button::builder().child(&heading).build();
         toggle.add_css_class("integration-requirements-toggle");
         toggle.set_widget_name(&format!("integration-{}-requirements", entry.id));
@@ -531,6 +493,16 @@ impl Page {
             &toggle,
             &rust_i18n::t!("Requirements for %{name}", name = name),
         );
+        if let Some(met) = met {
+            accessibility::set_description(
+                &toggle,
+                Some(&crate::i18n::tr(if met {
+                    "All requirements are met."
+                } else {
+                    "Some requirements are missing."
+                })),
+            );
+        }
         let details = gtk::Revealer::builder()
             .child(&self.requirements_details(results.as_deref()))
             .transition_duration(0)
@@ -539,37 +511,12 @@ impl Page {
         let show = {
             let toggle = toggle.clone();
             let title = title.clone();
-            let summary = summary.clone();
-            let separator = separator.clone();
             move |expanded: bool| {
                 title.set_text(&crate::i18n::tr(if expanded {
                     "Hide requirements"
                 } else {
                     "Requirements"
                 }));
-                let detail = if expanded {
-                    None
-                } else if results.is_none() {
-                    Some(crate::i18n::tr("Checking…"))
-                } else if !missing.is_empty() {
-                    Some(
-                        rust_i18n::t!(
-                            "%{names} not found",
-                            names = crate::i18n::list(missing.iter().cloned())
-                        )
-                        .into_owned(),
-                    )
-                } else {
-                    None
-                };
-                separator.set_visible(detail.is_some());
-                summary.set_visible(detail.is_some());
-                summary.set_text(&detail.unwrap_or_default());
-                if missing.is_empty() {
-                    summary.remove_css_class("missing");
-                } else {
-                    summary.add_css_class("missing");
-                }
                 toggle.update_state(&[gtk::accessible::State::Expanded(Some(expanded))]);
                 if expanded {
                     toggle.add_css_class("expanded");
@@ -672,37 +619,14 @@ impl Page {
 
     fn catalog_row(self: &Rc<Self>, row: &Row, name: &str) -> gtk::Box {
         let entry = &row.entry;
-        let mut tags = Vec::new();
-        let mut update = false;
-        let mut modified = false;
-        match &row.status {
-            Status::Installed {
-                update: available,
-                modified: edited,
-            } => {
-                update = *available;
-                modified = *edited;
-                if update {
-                    tags.push("Update available");
-                }
-                if modified {
-                    tags.push("Modified locally");
-                }
-            }
-            Status::Manual => tags.push("Manual"),
-            Status::NotInstalled => {}
-        }
-        let subtitle = [
-            crate::i18n::tr(category_label(entry.category)),
-            entry.entry.clone(),
-        ]
-        .join(" · ");
+        let (update, modified) = match row.status {
+            Status::Installed { update, modified } => (update, modified),
+            Status::Manual | Status::NotInstalled => (false, false),
+        };
         let (widget, context) = self.installed_row(
             &entry.id,
             name,
             logo_tile(entry.icon_bytes(), entry.category),
-            &tags,
-            &subtitle,
         );
         if update {
             let button = context.button(
@@ -746,8 +670,6 @@ impl Page {
             &installation.id,
             &installation.name,
             logo_tile(installation.icon.as_deref(), Category::Other),
-            &["Manual"],
-            &installation.id,
         );
         context.toggle(installation.enabled);
         context.remove_button(Some(
@@ -761,8 +683,6 @@ impl Page {
         id: &str,
         name: &str,
         logo: gtk::Widget,
-        tags: &[&str],
-        subtitle: &str,
     ) -> (gtk::Box, Rc<RowContext>) {
         let widget = gtk::Box::new(gtk::Orientation::Vertical, 6);
         widget.add_css_class("settings-option");
@@ -770,25 +690,13 @@ impl Page {
         widget.set_widget_name(&format!("integration-{id}"));
         let heading = gtk::Box::new(gtk::Orientation::Horizontal, 12);
         heading.append(&logo);
-        let copy = gtk::Box::new(gtk::Orientation::Vertical, 2);
-        copy.set_hexpand(true);
-        copy.set_valign(gtk::Align::Center);
-        let title_row = gtk::Box::new(gtk::Orientation::Horizontal, 8);
         let title = gtk::Label::new(Some(name));
         title.set_xalign(0.0);
         title.set_wrap(true);
+        title.set_hexpand(true);
+        title.set_valign(gtk::Align::Center);
         title.add_css_class("settings-option-title");
-        title_row.append(&title);
-        for text in tags {
-            title_row.append(&tag(text));
-        }
-        copy.append(&title_row);
-        let detail = gtk::Label::new(Some(subtitle));
-        detail.set_xalign(0.0);
-        detail.set_ellipsize(gtk::pango::EllipsizeMode::Middle);
-        detail.add_css_class("settings-option-description");
-        copy.append(&detail);
-        heading.append(&copy);
+        heading.append(&title);
         let actions = gtk::Box::new(gtk::Orientation::Horizontal, 6);
         actions.add_css_class("integration-actions");
         actions.set_valign(gtk::Align::Center);
@@ -1083,21 +991,15 @@ fn counted_heading(text: &str) -> (gtk::Box, gtk::Label) {
     let heading = gtk::Box::new(gtk::Orientation::Horizontal, 8);
     let label = gtk::Label::new(Some(&crate::i18n::tr(text)));
     label.set_xalign(0.0);
-    label.add_css_class("menu-heading");
+    // Kept out of Settings' label wrapping, which squeezes it beside the count.
+    label.add_css_class("integration-heading");
+    label.add_css_class("settings-control-label");
     heading.append(&label);
     let count = gtk::Label::new(None);
     count.add_css_class("integration-count");
     count.set_valign(gtk::Align::Center);
     heading.append(&count);
     (heading, count)
-}
-
-fn tag(text: &str) -> gtk::Label {
-    let label = gtk::Label::new(Some(&crate::i18n::tr(text)));
-    label.add_css_class("integration-tag");
-    label.set_valign(gtk::Align::Center);
-    label.set_halign(gtk::Align::Start);
-    label
 }
 
 fn note(text: &str) -> gtk::Label {

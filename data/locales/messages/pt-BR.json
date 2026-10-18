@@ -62,7 +62,6 @@
   "%{message}\nDo not unplug it.": "%{message}\nNão a desconecte.",
   "%{minutes}m %{seconds}s": "%{minutes} min %{seconds} s",
   "%{mode} (experimental feature, under active development)": "%{mode} (recurso experimental, em desenvolvimento ativo)",
-  "%{names} not found": "Não encontrado: %{names}",
   "%{name} changed while it was being copied": "%{name} mudou durante a cópia",
   "%{name} changed while it was being copied: %{error}": "%{name} mudou durante a cópia: %{error}",
   "%{name} changed while it was being deleted": "%{name} mudou durante a exclusão",

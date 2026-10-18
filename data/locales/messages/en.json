@@ -62,7 +62,6 @@
   "%{message}\nDo not unplug it.": "%{message}\nDo not unplug it.",
   "%{minutes}m %{seconds}s": "%{minutes}m %{seconds}s",
   "%{mode} (experimental feature, under active development)": "%{mode} (experimental feature, under active development)",
-  "%{names} not found": "%{names} not found",
   "%{name} changed while it was being copied": "%{name} changed while it was being copied",
   "%{name} changed while it was being copied: %{error}": "%{name} changed while it was being copied: %{error}",
   "%{name} changed while it was being deleted": "%{name} changed while it was being deleted",

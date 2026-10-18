@@ -62,7 +62,6 @@
   "%{message}\nDo not unplug it.": "%{message}\nNon scollegarla.",
   "%{minutes}m %{seconds}s": "%{minutes} min %{seconds} s",
   "%{mode} (experimental feature, under active development)": "%{mode} (funzione sperimentale, in fase di sviluppo)",
-  "%{names} not found": "Non trovato: %{names}",
   "%{name} changed while it was being copied": "Modifica rilevata in %{name} durante la copia",
   "%{name} changed while it was being copied: %{error}": "Modifica rilevata in %{name} durante la copia: %{error}",
   "%{name} changed while it was being deleted": "Modifica rilevata in %{name} durante l’eliminazione",

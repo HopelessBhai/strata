@@ -62,7 +62,6 @@
   "%{message}\nDo not unplug it.": "%{message}\n분리하지 마세요.",
   "%{minutes}m %{seconds}s": "%{minutes}분 %{seconds}초",
   "%{mode} (experimental feature, under active development)": "%{mode} (개발 중인 실험적 기능)",
-  "%{names} not found": "%{names}을(를) 찾을 수 없음",
   "%{name} changed while it was being copied": "%{name}이(가) 복사 중에 변경되었습니다",
   "%{name} changed while it was being copied: %{error}": "%{name}이(가) 복사 중에 변경되었습니다: %{error}",
   "%{name} changed while it was being deleted": "%{name}이(가) 삭제 중에 변경되었습니다",

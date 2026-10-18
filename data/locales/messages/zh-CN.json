@@ -62,7 +62,6 @@
   "%{message}\nDo not unplug it.": "%{message}\n请勿拔出设备。",
   "%{minutes}m %{seconds}s": "%{minutes}分%{seconds}秒",
   "%{mode} (experimental feature, under active development)": "%{mode}（实验性功能，正在积极开发中）",
-  "%{names} not found": "未找到 %{names}",
   "%{name} changed while it was being copied": "复制期间 %{name} 发生了变化",
   "%{name} changed while it was being copied: %{error}": "复制期间 %{name} 发生了变化：%{error}",
   "%{name} changed while it was being deleted": "删除期间 %{name} 发生了变化",

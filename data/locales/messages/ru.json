@@ -62,7 +62,6 @@
   "%{message}\nDo not unplug it.": "%{message}\nНе отключайте его.",
   "%{minutes}m %{seconds}s": "%{minutes} мин %{seconds} с",
   "%{mode} (experimental feature, under active development)": "%{mode} (экспериментальная функция в активной разработке)",
-  "%{names} not found": "Не найдено: %{names}",
   "%{name} changed while it was being copied": "Элемент «%{name}» изменился во время копирования",
   "%{name} changed while it was being copied: %{error}": "Элемент «%{name}» изменился во время копирования: %{error}",
   "%{name} changed while it was being deleted": "Элемент «%{name}» изменился во время удаления",
