@@ -3,12 +3,11 @@
 
 import json
 from pathlib import Path
-import subprocess
 import sys
 
 import pytest
 
-from harness.process import terminate
+from harness.process import ManagedProcess, terminate
 
 PROVIDER = Path(__file__).resolve().parents[3] / "integrations/kdeconnect"
 
@@ -40,19 +39,20 @@ def kdeconnect(test_environment, headless_display):
         "command": ["/usr/bin/python3", str(PROVIDER / "provider.py")],
     }))
     ready = folder / "ready"
-    with (folder / "mock.log").open("w") as log:
-        service = subprocess.Popen(
-            [sys.executable, str(PROVIDER / "tests/mock_service.py"),
-             str(devices.control), str(devices.record), str(ready)],
-            env={**test_environment.variables(), **headless_display.environment},
-            stdout=log, stderr=log,
-        )
-        try:
-            from harness.tree import wait_until
-            wait_until(ready.exists, message="private KDE Connect mock startup", timeout=10)
-            yield devices
-        finally:
-            terminate(service)
+    # Its own session, so terminate() stops it before the next test owns the name.
+    service = ManagedProcess.spawn(
+        "mock",
+        [sys.executable, str(PROVIDER / "tests/mock_service.py"),
+         str(devices.control), str(devices.record), str(ready)],
+        log_dir=folder,
+        env={**test_environment.variables(), **headless_display.environment},
+    )
+    try:
+        from harness.tree import wait_until
+        wait_until(ready.exists, message="private KDE Connect mock startup", timeout=10)
+        yield devices
+    finally:
+        terminate(service.popen)
 
 
 def test_direct_send_and_live_device_menu(strata, kdeconnect):
