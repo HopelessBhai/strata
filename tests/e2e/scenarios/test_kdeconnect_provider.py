@@ -10,7 +10,7 @@ import pytest
 
 from harness.process import terminate
 
-PROVIDER = Path(__file__).resolve().parents[3] / "contrib/providers/kdeconnect"
+PROVIDER = Path(__file__).resolve().parents[3] / "integrations/kdeconnect"
 
 
 class Devices:

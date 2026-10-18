@@ -15,6 +15,8 @@ from gi.repository import Gio, GLib
 
 from provider import KDEConnect, MESSAGES, Provider, Snapshot, Unavailable, Uncertain, tr
 
+PROVIDER = Path(__file__).resolve().parents[1]
+
 
 class FakeKDE:
     def __init__(self, devices=None):
@@ -324,8 +326,8 @@ class WireTests(unittest.TestCase):
             path = Path(scratch) / "file.txt"
             path.write_text("fixture")
             process = subprocess.Popen(
-                [sys.executable, "-c", "from provider import main; from test_provider import FakeKDE; main(FakeKDE())"],
-                cwd=Path(__file__).parent, stdin=subprocess.PIPE,
+                [sys.executable, "-c", "import sys; sys.path.insert(0, 'tests'); from provider import main; from test_provider import FakeKDE; main(FakeKDE())"],
+                cwd=PROVIDER, stdin=subprocess.PIPE,
                 stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                 env={**os.environ, "DISPLAY": "", "WAYLAND_DISPLAY": "",
                      "DBUS_SESSION_BUS_ADDRESS": "unix:path=/nonexistent-strata-test-bus"},
@@ -359,7 +361,7 @@ class WireTests(unittest.TestCase):
     def test_missing_desktop_bus_keeps_process_alive_and_menu_empty(self):
         request = {"version": 1, "id": 1, "method": "menu", "paths": [__file__], "background": False}
         result = subprocess.run(
-            [sys.executable, str(Path(__file__).with_name("provider.py"))],
+            [sys.executable, str(PROVIDER / "provider.py")],
             input=(json.dumps(request) + "\n").encode(), capture_output=True, timeout=5,
             env={**os.environ, "DBUS_SESSION_BUS_ADDRESS": "unix:path=/nonexistent-strata-test-bus"},
         )

@@ -11,7 +11,7 @@ import tempfile
 import time
 import unittest
 
-SOURCE = Path(__file__).parent
+SOURCE = Path(__file__).resolve().parents[1]
 
 
 class PrivateBusTests(unittest.TestCase):

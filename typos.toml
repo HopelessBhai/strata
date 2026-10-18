@@ -17,7 +17,7 @@ extend-exclude = [
   "data/locales/**/zh-CN.json",
   "data/locales/**/zh-TW.json",
   # Provider translations; the English messages are checked in provider.py.
-  "contrib/providers/kdeconnect/messages.json",
+  "integrations/kdeconnect/messages.json",
   # Reproducible upstream MathJax bundle and npm dependency lock.
   "data/math-renderer.js",
   "packaging/math-renderer/package-lock.json",

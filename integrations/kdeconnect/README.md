@@ -1,6 +1,6 @@
 # KDE Connect file provider
 
-An optional [external file provider](../../../docs/file-providers.md) that puts
+An optional [external file provider](../../docs/file-providers.md) that puts
 KDE Connect device choice inside Strata's context menu:
 
 - No paired, reachable devices with file sharing enabled: no sharing entry.
@@ -14,31 +14,21 @@ use Strata's provider error dialog. KDE Connect manages transfer progress.
 
 ## Install or remove
 
-Requires Strata 1.0.0 or later, a running KDE Connect desktop daemon supporting
-`shareUrls`, a paired device, and `/usr/bin/python3` (3.10+) with PyGObject/Gio.
-For example, install `python-gobject` on Arch Linux or `python3-gi` on Debian or
-Ubuntu, alongside KDE Connect. Enable KDE Connect's file-sharing plugin for each
-device. This provider does not start the daemon or change pairing settings.
+Install it from **Settings → Integrations → Devices**. It needs a running KDE
+Connect desktop daemon supporting `shareUrls`, a paired device, and a system
+Python 3.10 or later with PyGObject/Gio; the page checks for `kdeconnect-cli`
+and PyGObject and shows the install command for your distribution. Enable KDE
+Connect's file-sharing plugin for each device. This provider does not start the
+daemon or change pairing settings.
 
-From a trusted Strata source checkout, opt in explicitly:
+Installing copies the program and message catalogs into
+`${XDG_CONFIG_HOME:-$HOME/.config}/strata/providers/kdeconnect/` and takes
+effect at once. Normal installations have no new KDE or Python dependency. As
+with every external provider, this is a trusted program running with your user
+permissions. Review it before installing.
 
-```bash
-/usr/bin/python3 contrib/providers/kdeconnect/install.py
-```
-
-This copies the program, message catalogs, and registration into
-`${XDG_CONFIG_HOME:-$HOME/.config}/strata/providers/kdeconnect/`. It preserves
-other providers, actions and settings. Replaced provider files are backed up
-under `${XDG_STATE_HOME:-$HOME/.local/state}/strata-kdeconnect/backups/`.
-Close **all** Strata windows and reopen Strata, then right-click selected files.
-
-The installer is independent of Strata's release installer; normal installations
-have no new KDE or Python dependency. As with every external provider, this is a
-trusted program running with your user permissions. Review it before installing.
-The installer refuses symbolic-link destinations and unprotected directories.
-
-To remove it, delete the `kdeconnect` provider directory and restart Strata.
-If you previously added a custom KDE Connect action, disable it yourself in
+Turn it off with its switch, or select **Remove**, on the same page. If you
+previously added a custom KDE Connect action, disable it yourself in
 **Settings → Actions** to avoid duplicate entries.
 
 The provider's messages follow the inherited system locale (`LC_ALL`,
@@ -79,14 +69,16 @@ are outside its contract.
 With the system Python and PyGObject installed:
 
 ```bash
-/usr/bin/python3 -m unittest discover -s contrib/providers/kdeconnect -v
+cd integrations/kdeconnect
+/usr/bin/python3 -m unittest discover -s tests -v
 ```
 
 Unit tests cover menu selection, literal URI batches, stale files/devices/tokens,
-service restarts, known and uncertain failures, bounds, locale interpolation,
-framed subprocess I/O, installation preservation and backups. The D-Bus tests
-start a private daemon and a simulated KDE Connect service. No selected content
-is read by the mock and no files are transferred to a physical device.
+service restarts, known and uncertain failures, bounds, locale interpolation
+and framed subprocess I/O. The D-Bus tests start a private daemon and a
+simulated KDE Connect service. No selected content is read by the mock and no
+files are transferred to a physical device. The `Integrations` workflow runs
+them whenever files under `integrations/` change.
 
 The maintained GUI scenarios use Strata's canonical container runner, private
 Xvfb, private session/accessibility buses and a throwaway configuration:
