@@ -471,9 +471,6 @@ impl Page {
             .map(|results| results.iter().all(|result| result.satisfied));
         let expanded = self.expanded.borrow().contains(&entry.id);
         let heading = gtk::Box::new(gtk::Orientation::Horizontal, 6);
-        let chevron = assets::primary_icon(icons::CHEVRON_RIGHT, 14);
-        chevron.add_css_class("integration-chevron");
-        heading.append(&chevron);
         let title = gtk::Label::new(None);
         title.add_css_class("settings-option-description");
         heading.append(&title);
@@ -486,6 +483,11 @@ impl Page {
             status.add_css_class(if met { "met" } else { "missing" });
             heading.append(&status);
         }
+        let chevron = assets::primary_icon(icons::CHEVRON_RIGHT, 14);
+        chevron.add_css_class("integration-chevron");
+        chevron.set_hexpand(true);
+        chevron.set_halign(gtk::Align::End);
+        heading.append(&chevron);
         let toggle = gtk::Button::builder().child(&heading).build();
         toggle.add_css_class("integration-requirements-toggle");
         toggle.set_widget_name(&format!("integration-{}-requirements", entry.id));

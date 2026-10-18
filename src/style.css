@@ -6240,7 +6240,7 @@ two-column presentation. */
 
 /* Lines the toggle's content up with the 18px card body. */
 .integration-requirements-toggle > box {
-  margin-left: 6px;
+  margin: 0 6px;
 }
 
 .integration-requirements-toggle.expanded {
@@ -6660,7 +6660,7 @@ two-column presentation. */
 }
 
 .settings-dialog.compact .integration-requirements-toggle > box {
-  margin-left: 0;
+  margin: 0;
 }
 
 .settings-dialog.compact .settings-library-toolbar {
