@@ -175,8 +175,14 @@ class MenuTests(unittest.TestCase):
                 self.assertLessEqual(len(leaf["label"].encode()), 128)
                 self.assertEqual(self.activate(leaf)["outcome"]["status"], "accepted")
                 self.assertEqual(self.backend.submissions[-1][1], "phone1")
-        with patch.dict(os.environ, {"LC_ALL": "fr_FR.UTF-8"}):
-            self.assertEqual(tr("Send via KDE Connect"), "Envoyer via KDE Connect")
+        for locale, expected in (
+            ("fr_FR.UTF-8", "Envoyer via KDE Connect"),
+            ("zh_CN.UTF-8", "通过 KDE Connect 发送"),
+            ("zh_TW.UTF-8", "透過 KDE Connect 傳送"),
+            ("zh_HK.UTF-8", "透過 KDE Connect 傳送"),
+        ):
+            with self.subTest(locale=locale), patch.dict(os.environ, {"LC_ALL": locale}):
+                self.assertEqual(tr("Send via KDE Connect"), expected)
         with patch.dict(os.environ, {"LC_ALL": "unknown"}):
             self.assertEqual(tr("Send via KDE Connect"), "Send via KDE Connect")
 

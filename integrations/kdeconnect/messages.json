@@ -207,5 +207,24 @@
     "Files submitted to {device}: {count}. KDE Connect handles transfer progress and results.": "已向 {device} 提交 {count} 个文件。KDE Connect 负责传输进度和结果。",
     "Invalid provider request.": "无效的提供程序请求。",
     "Unsupported provider method.": "不支持的提供程序方法。"
+  },
+  "zh-TW": {
+    "Device": "裝置",
+    "Send to {device} via KDE Connect": "透過 KDE Connect 傳送到 {device}",
+    "Send via KDE Connect": "透過 KDE Connect 傳送",
+    "Select regular files, without folders or symbolic links.": "請選擇一般檔案，不要包含資料夾或符號連結。",
+    "KDE Connect did not respond in time.": "KDE Connect 未及時回應。",
+    "Too many devices to fit in Strata's device menu.": "裝置過多，無法在 Strata 選單中顯示。",
+    "KDE Connect is unavailable or the device list changed.": "KDE Connect 無法使用或裝置清單已變更。",
+    "The device is unavailable or file sharing was disabled.": "裝置無法使用或檔案分享已關閉。",
+    "KDE Connect did not confirm the submission. Check your device before retrying.": "KDE Connect 未確認送出。重試前請檢查裝置。",
+    "This device menu expired. Reopen the right-click menu.": "此裝置選單已過期。請重新開啟右鍵選單。",
+    "The selected files changed. Reopen the right-click menu.": "所選檔案已變更。請重新開啟右鍵選單。",
+    "One or more selected files cannot be read.": "無法讀取一個或多個所選檔案。",
+    "The selected device disconnected or file sharing was disabled.": "所選裝置已中斷連線或檔案分享已關閉。",
+    "The selected files are no longer available.": "所選檔案已無法使用。",
+    "Files submitted to {device}: {count}. KDE Connect handles transfer progress and results.": "已向 {device} 送出 {count} 個檔案。KDE Connect 負責傳輸進度與結果。",
+    "Invalid provider request.": "無效的提供者請求。",
+    "Unsupported provider method.": "不支援的提供者方法。"
   }
 }

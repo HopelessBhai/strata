@@ -26,7 +26,7 @@ def tr(message, **values):
     # Providers inherit the system locale, independently of Strata's preference.
     language = next((os.environ[k] for k in ("LC_ALL", "LC_MESSAGES", "LANG") if os.environ.get(k)), "en")
     language = language.split(".")[0].split("@")[0].replace("_", "-")
-    language = {"pt": "pt-BR", "zh": "zh-CN"}.get(language, language)
+    language = {"pt": "pt-BR", "zh": "zh-CN", "zh-HK": "zh-TW", "zh-MO": "zh-TW"}.get(language, language)
     messages = MESSAGES.get(language, MESSAGES.get(language.split("-")[0], MESSAGES["en"]))
     return messages.get(message, message).format(**values)
 
