@@ -510,16 +510,9 @@ fn row_frame(id: &str) -> (gtk::Box, gtk::Box) {
     let widget = gtk::Box::new(gtk::Orientation::Vertical, 3);
     widget.add_css_class("settings-option");
     widget.add_css_class("integration-row");
-    // The copy expands to center within the shared row height; stop that
-    // expansion from reaching the page.
-    widget.set_vexpand(false);
     widget.set_widget_name(&format!("integration-{id}"));
     let copy = gtk::Box::new(gtk::Orientation::Vertical, 3);
     copy.set_hexpand(true);
-    // Rows share a minimum height; keep short copy centered within it
-    // whichever orientation the responsive layout gives the row.
-    copy.set_vexpand(true);
-    copy.set_valign(gtk::Align::Center);
     widget.append(&copy);
     (widget, copy)
 }
