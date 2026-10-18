@@ -965,6 +965,7 @@
   "The background operation returned an unexpected result.": "Фоновая операция вернула непредвиденный результат.",
   "The bubblewrap sandbox is not available": "Песочница bubblewrap недоступна",
   "The change failed.": "Не удалось выполнить изменение.",
+  "The command opened in your terminal. Select Refresh when it finishes.": "Команда открыта в терминале. Когда она завершится, нажмите «Обновить».",
   "The connection timed out. Check the host and firewall.": "Время ожидания подключения истекло. Проверьте узел и брандмауэр.",
   "The connection was interrupted": "Соединение было прервано",
   "The connection was refused": "В подключении отказано",

@@ -55,7 +55,8 @@ dark backgrounds. Strata's own interface continues to use themed Lucide icons.
 Integrations maintained in this repository live under [`integrations/`](../integrations/README.md),
 one directory per integration with a `catalog.toml` beside the program. Strata
 embeds that directory at build time and lists it in **Settings → Integrations**,
-grouped by category with each entry's maintainer and requirement checks.
+grouped by category with each entry's requirement checks and, for anything
+missing, an install command that can be copied or run in a terminal.
 **Install** copies the files into the registration directory above, writes
 `provider.json` with the interpreter and script paths resolved on this machine,
 and records a content hash in `catalog-install.json`. **Remove** deletes the

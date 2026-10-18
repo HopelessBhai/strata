@@ -495,7 +495,6 @@
   "List view": "목록 보기",
   "Loading directory": "디렉터리 불러오는 중",
   "Looking for compatible applications…": "호환되는 애플리케이션을 찾는 중…",
-  "Maintained by %{maintainer}": "%{maintainer} 관리",
   "Managed by Omarchy. Turn off Follow Omarchy to pick a theme manually.": "Omarchy에서 관리합니다. 테마를 직접 선택하려면 Omarchy 따르기를 끄세요.",
   "Match %{current} of %{total}": "%{total}개 중 %{current}번째 일치",
   "Mermaid diagram unavailable: %{message}": "Mermaid 다이어그램을 사용할 수 없습니다: %{message}",

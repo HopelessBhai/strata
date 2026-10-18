@@ -965,6 +965,7 @@
   "The background operation returned an unexpected result.": "Der Hintergrundvorgang hat ein unerwartetes Ergebnis geliefert.",
   "The bubblewrap sandbox is not available": "Die bubblewrap-Sandbox ist nicht verfügbar",
   "The change failed.": "Die Änderung ist fehlgeschlagen.",
+  "The command opened in your terminal. Select Refresh when it finishes.": "Der Befehl wurde in Ihrem Terminal geöffnet. Wählen Sie „Aktualisieren“, wenn er abgeschlossen ist.",
   "The connection timed out. Check the host and firewall.": "Zeitüberschreitung bei der Verbindung. Prüfen Sie den Host und die Firewall.",
   "The connection was interrupted": "Die Verbindung wurde unterbrochen",
   "The connection was refused": "Die Verbindung wurde abgelehnt",

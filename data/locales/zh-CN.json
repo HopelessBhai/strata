@@ -965,6 +965,7 @@
   "The background operation returned an unexpected result.": "后台操作返回了意外结果。",
   "The bubblewrap sandbox is not available": "bubblewrap 沙盒不可用",
   "The change failed.": "更改失败。",
+  "The command opened in your terminal. Select Refresh when it finishes.": "已在终端中打开命令。完成后请选择“刷新”。",
   "The connection timed out. Check the host and firewall.": "连接超时。请检查主机和防火墙。",
   "The connection was interrupted": "连接中断",
   "The connection was refused": "连接被拒绝",

@@ -10,14 +10,16 @@ use std::{
 
 use gtk::{gdk, gio, glib, prelude::*};
 
-use super::{page_content, scrollable_page, search, settings_group};
+use super::{
+    install_command::install_command, page_content, scrollable_page, search, settings_group,
+};
 use crate::{
     assets::{self, icons},
     services::{
         integration_catalog::{self, Category, Entry, Installation, RequirementResult, Status},
         package_manager::PackageManager,
     },
-    ui::{accessibility, controls::copyable_command},
+    ui::accessibility,
 };
 
 #[cfg(test)]
@@ -266,10 +268,6 @@ impl Page {
         heading.append(&actions);
         copy.append(&heading);
         copy.append(&note(&crate::i18n::tr(&entry.description)));
-        copy.append(&note(&rust_i18n::t!(
-            "Maintained by %{maintainer}",
-            maintainer = format!("@{}", entry.maintainer)
-        )));
         copy.append(&self.requirements_row(entry));
         let message = note("");
         message.add_css_class("integration-message");
@@ -494,9 +492,12 @@ impl Page {
         for command in hints {
             let hint = note(&crate::i18n::tr("Install with:"));
             container.append(&hint);
-            let field = copyable_command(&command);
-            field.add_css_class("diagnostics-command");
-            container.append(&field);
+            container.append(&install_command(
+                &command,
+                &crate::i18n::tr(
+                    "The command opened in your terminal. Select Refresh when it finishes.",
+                ),
+            ));
         }
         container
     }

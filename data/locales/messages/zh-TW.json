@@ -981,7 +981,6 @@
   "Confirm removing %{name}": "確認移除 %{name}",
   "Confirm replacing %{name}": "確認取代 %{name}",
   "Install %{name}": "安裝 %{name}",
-  "Maintained by %{maintainer}": "由 %{maintainer} 維護",
   "Remove %{name}": "移除 %{name}",
   "The change failed: %{error}": "變更失敗：%{error}",
   "Update %{name}": "更新 %{name}",

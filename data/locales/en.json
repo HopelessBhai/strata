@@ -965,6 +965,7 @@
   "The background operation returned an unexpected result.": "The background operation returned an unexpected result.",
   "The bubblewrap sandbox is not available": "The bubblewrap sandbox is not available",
   "The change failed.": "The change failed.",
+  "The command opened in your terminal. Select Refresh when it finishes.": "The command opened in your terminal. Select Refresh when it finishes.",
   "The connection timed out. Check the host and firewall.": "The connection timed out. Check the host and firewall.",
   "The connection was interrupted": "The connection was interrupted",
   "The connection was refused": "The connection was refused",

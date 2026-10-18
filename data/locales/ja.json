@@ -965,6 +965,7 @@
   "The background operation returned an unexpected result.": "バックグラウンドの操作が予期しない結果を返しました。",
   "The bubblewrap sandbox is not available": "bubblewrap サンドボックスを利用できません",
   "The change failed.": "変更に失敗しました。",
+  "The command opened in your terminal. Select Refresh when it finishes.": "コマンドをターミナルで開きました。完了したら「更新」を選択してください。",
   "The connection timed out. Check the host and firewall.": "接続がタイムアウトしました。ホストとファイアウォールを確認してください。",
   "The connection was interrupted": "接続が中断されました",
   "The connection was refused": "接続が拒否されました",

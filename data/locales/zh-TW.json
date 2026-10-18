@@ -937,6 +937,7 @@
   "The audio decoder failed": "音訊解碼器失敗",
   "The audio duration is unknown": "音訊長度未知",
   "The bubblewrap sandbox is not available": "bubblewrap 沙箱無法使用",
+  "The command opened in your terminal. Select Refresh when it finishes.": "命令已在終端機中開啟。完成後請選擇「重新整理」。",
   "The connection timed out. Check the host and firewall.": "連線逾時。請檢查主機與防火牆。",
   "The connection was interrupted": "連線中斷",
   "The connection was refused": "連線遭拒",

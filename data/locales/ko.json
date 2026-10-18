@@ -965,6 +965,7 @@
   "The background operation returned an unexpected result.": "백그라운드 작업이 예기치 않은 결과를 반환했습니다.",
   "The bubblewrap sandbox is not available": "bubblewrap 샌드박스를 사용할 수 없습니다",
   "The change failed.": "변경에 실패했습니다.",
+  "The command opened in your terminal. Select Refresh when it finishes.": "터미널에서 명령을 열었습니다. 완료되면 새로 고침을 선택하세요.",
   "The connection timed out. Check the host and firewall.": "연결 시간이 초과되었습니다. 호스트와 방화벽을 확인하세요.",
   "The connection was interrupted": "연결이 중단되었습니다",
   "The connection was refused": "연결이 거부되었습니다",
