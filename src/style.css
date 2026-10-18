@@ -6183,30 +6183,80 @@ two-column presentation. */
   border-top: 1px solid alpha(@strata_border, 0.55);
 }
 
-.integration-logo {
-  margin-right: 2px;
+.integration-count,
+.integration-filter-count {
+  color: @strata_dim_text;
+  font-size: 0.75em;
 }
 
-.integration-status {
-  border: 1px solid alpha(@strata_border, 0.4);
+.integration-count {
+  background: alpha(@strata_border, 0.35);
+  border-radius: 8px;
+  font-weight: 700;
+  padding: 1px 7px;
+}
+
+.integration-filters {
+  margin: 0 0 12px;
+}
+
+.integration-logo {
+  background: alpha(@strata_bg, 0.55);
+  border: 1px solid alpha(@strata_border, 0.55);
+  border-radius: 8px;
+}
+
+.integration-tag {
+  border: 1px solid alpha(@strata_border, 0.55);
   border-radius: 4px;
   color: @strata_dim_text;
-  font-size: 0.8em;
+  font-size: 0.75em;
   padding: 1px 6px;
 }
 
-.integration-status.installed {
-  border-color: alpha(@strata_accent, 0.5);
+.integration-card {
+  background: mix(@strata_bg, @strata_muted, 0.25);
+  border: 1px solid alpha(@strata_border, 0.55);
+  border-radius: 10px;
+}
+
+.integration-card-body {
+  padding: 18px;
+}
+
+.integration-installed {
   color: @strata_accent;
+  font-size: 0.875em;
 }
 
-.integration-status.update {
-  border-color: alpha(@strata_highlight, 0.6);
-  color: @strata_text;
+.integration-requirements-toggle {
+  background: transparent;
+  border: none;
+  border-top: 1px solid alpha(@strata_border, 0.55);
+  border-radius: 0 0 10px 10px;
+  box-shadow: none;
+  padding: 12px;
 }
 
-.integration-requirement-list {
-  margin-top: 2px;
+/* Lines the toggle's content up with the 18px card body. */
+.integration-requirements-toggle > box {
+  margin-left: 6px;
+}
+
+.integration-requirements-toggle.expanded {
+  border-radius: 0;
+}
+
+.integration-requirements-toggle:hover {
+  background: alpha(@strata_accent, 0.08);
+}
+
+.integration-requirements-toggle label.missing {
+  color: @strata_danger;
+}
+
+.integration-requirements {
+  padding: 18px;
 }
 
 .integration-requirement.missing label {
@@ -6606,8 +6656,15 @@ two-column presentation. */
 .settings-dialog.compact .theme-library-footer,
 .settings-dialog.compact .release-notes-toggle,
 .settings-dialog.compact .release-notes-card,
-.settings-dialog.compact .settings-actions-empty {
+.settings-dialog.compact .settings-actions-empty,
+.settings-dialog.compact .integration-card-body,
+.settings-dialog.compact .integration-requirements,
+.settings-dialog.compact .integration-requirements-toggle {
   padding: 10px;
+}
+
+.settings-dialog.compact .integration-requirements-toggle > box {
+  margin-left: 0;
 }
 
 .settings-dialog.compact .settings-library-toolbar {
@@ -6700,12 +6757,14 @@ two-column presentation. */
   background: @strata_highlight;
 }
 
-.release-notes-toggle image {
+.release-notes-toggle image,
+.integration-requirements-toggle image {
   transform: rotate(90deg);
   -gtk-icon-filter: opacity(0.65);
 }
 
-.release-notes-toggle.expanded image {
+.release-notes-toggle.expanded image,
+.integration-requirements-toggle.expanded image {
   transform: rotate(270deg);
 }
 

@@ -54,18 +54,19 @@ dark backgrounds. Strata's own interface continues to use themed Lucide icons.
 
 Integrations maintained in this repository live under [`integrations/`](../integrations/README.md),
 one directory per integration with a `catalog.toml` beside the program. Strata
-embeds that directory at build time and lists it in **Settings → Integrations**,
-grouped by category with each entry's requirement checks and, for anything
+embeds that directory at build time and shows it in **Settings → Integrations**
+as a catalog grid that can be filtered by category and searched. Each card
+summarizes its requirement checks and expands to list them with, for anything
 missing, an install command that can be copied or run in a terminal.
 **Install** copies the files into the registration directory above, writes
 `provider.json` with the interpreter and script paths resolved on this machine,
-and records a content hash in `catalog-install.json`. **Remove** deletes the
-directory. When a release changes a bundled provider, installed copies show
-**Update available**; nothing updates on its own, and local edits are detected
-and confirmed before they are replaced. Registrations without an install record
-are listed as installed manually with **Remove** only. Every installed
-registration has a switch that disables it without removing it, and **Open
-folder** shows the registration directory in the browser. Each change stops
+and records a content hash in `catalog-install.json`. Installed registrations
+are listed above the catalog with a switch that disables them without removing
+them and **Remove**, which deletes the directory. When a release changes a
+bundled provider, its row offers **Update**; nothing updates on its own, and
+local edits are detected and confirmed before they are replaced. Registrations
+without an install record are marked **Manual** and can only be removed.
+**Open folder** shows the registration directory in the browser. Each change stops
 the running providers and discovers the registrations again, so it takes
 effect at once; **Refresh** does the same after edits made by hand.
 
