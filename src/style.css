@@ -6274,12 +6274,9 @@ two-column presentation. */
 }
 
 .integration-actions .settings-action-button.borderless,
-.integration-actions .settings-action-button.danger.borderless:focus-visible {
-  border-color: transparent;
-}
-
-.integration-actions .settings-action-button.danger.borderless:hover,
-.integration-actions .settings-action-button.danger.borderless:active {
+.integration-actions .settings-action-button.borderless:hover,
+.integration-actions .settings-action-button.borderless:active,
+.integration-actions .settings-action-button.borderless:focus-visible {
   border-color: transparent;
 }
 

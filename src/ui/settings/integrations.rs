@@ -635,6 +635,7 @@ impl Page {
                 "Installed via catalog"
             },
         );
+        context.toggle(row.enabled);
         if update {
             let button = context.button(
                 "Update",
@@ -659,7 +660,6 @@ impl Page {
                 }
             });
         }
-        context.toggle(row.enabled);
         let manual = row.status == Status::Manual;
         let question = if manual {
             Some("This copy was not installed from the catalog. Its folder is deleted.")
@@ -748,7 +748,7 @@ struct RowContext {
 }
 
 impl RowContext {
-    /// An icon button in the row heading, styled like the custom action rows.
+    /// A borderless icon button in the row heading.
     fn button(&self, label: &str, icon: &str, accessible: &str, danger: bool) -> gtk::Button {
         let image = if danger {
             assets::danger_icon(icon, assets::CHROME_ICON_PX)
@@ -764,9 +764,9 @@ impl RowContext {
         accessibility::set_label(&button, accessible);
         button.add_css_class("settings-action-button");
         button.add_css_class("settings-action-icon-button");
+        button.add_css_class("borderless");
         if danger {
             button.add_css_class("danger");
-            button.add_css_class("borderless");
         }
         button.set_widget_name(&format!("integration-{}-{}", self.id, label.to_lowercase()));
         self.actions.append(&button);
