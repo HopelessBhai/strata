@@ -1,7 +1,7 @@
 schema_version = 1
 id = "kdeconnect"
 name = "KDE Connect"
-description = "Send selected files to a paired phone, tablet or computer from the context menu."
+description = "Send selected files to a paired phone, tablet or computer from the Send to… menu."
 category = "devices"
 maintainer = "HopelessBhai"
 runtime = "python3"

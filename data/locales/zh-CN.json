@@ -850,7 +850,7 @@
   "Select default directory": "选择默认文件夹",
   "Select folder (%{keys})": "选择文件夹（%{keys}）",
   "Select folder to exclude": "选择要排除的文件夹",
-  "Send selected files to a paired phone, tablet or computer from the context menu.": "从右键菜单将所选文件发送到已配对的手机、平板电脑或计算机。",
+  "Send selected files to a paired phone, tablet or computer from the Send to… menu.": "从“发送到…”菜单将所选文件发送到已配对的手机、平板电脑或计算机。",
   "Send to": "发送到",
   "Send to folder": "发送到文件夹",
   "Send to…": "发送到…",

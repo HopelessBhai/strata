@@ -55,39 +55,41 @@ def kdeconnect(test_environment, headless_display):
         terminate(service.popen)
 
 
-def test_direct_send_and_live_device_menu(strata, kdeconnect):
+def test_devices_are_live_send_to_destinations(strata, kdeconnect):
     strata.open_context_menu("todo.txt")
-    assert "Send via KDE Connect" not in strata.menu_items()
+    strata.wait(lambda: {"Open", "Cut"} <= set(strata.menu_items()), "context menu")
+    assert "Send to…" not in strata.menu_items()
     kdeconnect.set({"phone1": {"name": "Pixel"}})
-    direct = "Send to Pixel via KDE Connect"
-    strata.wait(lambda: direct in strata.menu_items(), "one reachable device appears live")
-    strata.choose_menu_item(direct)
+    strata.wait(lambda: "Send to…" in strata.menu_items(), "a reachable device adds Send to…")
+    assert "Pixel" not in strata.menu_items(), "devices live under Send to…"
+    strata.pointer.click(strata.menu_item("Send to…"))
+    strata.wait(lambda: "Pixel" in strata.menu_items(), "device inside Send to…")
+    strata.choose_menu_item("Pixel")
     strata.wait(lambda: len(kdeconnect.submissions()) == 1, "direct D-Bus submission")
     assert kdeconnect.submissions()[0]["device"] == "phone1"
     assert kdeconnect.submissions()[0]["uris"] == [strata.fixture.path("todo.txt").as_uri()]
     strata.wait(lambda: strata.window.find(role="label", name="Files submitted to Pixel: 1. KDE Connect handles transfer progress and results."), "submission notice")
     assert strata.dialog() is None, "accepted send must not open a picker or success dialog"
     strata.open_context_menu("todo.txt")
-    strata.wait(lambda: direct in strata.menu_items(), "single-device menu")
+    strata.wait(lambda: "Send to…" in strata.menu_items(), "Send to… with one device")
+    strata.pointer.click(strata.menu_item("Send to…"))
+    strata.wait(lambda: "Pixel" in strata.menu_items(), "single device")
     kdeconnect.set({"phone1": {"name": "Pixel"}, "tablet2": {"name": "Tablet"}})
-    strata.wait(lambda: "Send via KDE Connect" in strata.menu_items(), "second device creates a branch")
-    branch = strata.menu_item("Send via KDE Connect")
-    bounds = branch.screen_bounds()
-    strata.pointer.move_to(bounds.x + bounds.width // 2, bounds.y + bounds.height // 2)
-    strata.wait(lambda: "Tablet" in strata.menu_items(), "hover opens device submenu")
-    assert len(kdeconnect.submissions()) == 1, "hovering must not send"
+    strata.wait(lambda: "Tablet" in strata.menu_items(), "open Send to… gains a device")
+    assert len(kdeconnect.submissions()) == 1, "opening Send to… must not send"
     kdeconnect.set({"phone1": {"name": "Pixel"}})
     strata.wait(lambda: "Tablet" not in strata.menu_items(), "disconnected target withdrawn")
     assert len(kdeconnect.submissions()) == 1
-    strata.dismiss_menu()
+    strata.keyboard.press("Escape")
     strata.open_context_menu("todo.txt")
-    strata.wait(lambda: direct in strata.menu_items(), "remaining device is a direct action")
+    strata.wait(lambda: "Send to…" in strata.menu_items(), "remaining device keeps Send to…")
     kdeconnect.set({})
-    strata.wait(lambda: direct not in strata.menu_items(), "last device disconnected")
-    strata.wait(lambda: not strata.window.find(role="label", name="KDE Connect"), "empty section withdrawn")
+    strata.wait(lambda: "Send to…" not in strata.menu_items(), "last device disconnected")
+    assert {"Open", "Cut", "Copy"}.issubset(strata.menu_items())
+    strata.dismiss_menu()
 
 
-def test_keyboard_submenu_sends_whole_selection_to_chosen_device(strata, kdeconnect):
+def test_keyboard_send_to_sends_whole_selection_to_chosen_device(strata, kdeconnect):
     kdeconnect.set({"phone1": {"name": "Pixel"}, "tablet2": {"name": "Tablet"},
                     "offline": {"name": "Offline", "reachable": False},
                     "unpaired": {"name": "Unpaired", "paired": False},
@@ -98,20 +100,20 @@ def test_keyboard_submenu_sends_whole_selection_to_chosen_device(strata, kdeconn
     strata.select_entry("todo.txt")
     strata.click_entry_with(other, ["ctrl"])
     strata.open_context_menu(other)
-    strata.wait(lambda: "Send via KDE Connect" in strata.menu_items(), "multiple eligible devices")
+    strata.wait(lambda: "Send to…" in strata.menu_items(), "eligible devices add Send to…")
     # Drive focus through the menu; no accessibility action substitutes for keys.
     strata.keyboard.press("Home")
     for _ in range(60):
-        if strata.menu_item("Send via KDE Connect").has_state("focused"):
+        if strata.menu_item("Send to…").has_state("focused"):
             break
         strata.keyboard.press("Down")
     else:
-        raise AssertionError("keyboard never reached KDE Connect submenu")
+        raise AssertionError("keyboard never reached Send to…")
     strata.keyboard.press("Right")
-    strata.wait(lambda: "Tablet" in strata.menu_items(), "keyboard opens submenu")
+    strata.wait(lambda: "Tablet" in strata.menu_items(), "keyboard opens Send to…")
     assert not {"Offline", "Unpaired", "Disabled"}.intersection(strata.menu_items())
     strata.keyboard.press("Home")
-    for _ in range(4):
+    for _ in range(8):
         if strata.menu_item("Tablet").has_state("focused"):
             break
         strata.keyboard.press("Down")

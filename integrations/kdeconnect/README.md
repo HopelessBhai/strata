@@ -1,12 +1,14 @@
 # KDE Connect file provider
 
-An optional [external file provider](../../docs/file-providers.md) that puts
-KDE Connect device choice inside Strata's context menu:
+An optional [external file provider](../../docs/file-providers.md) that lists
+KDE Connect devices in Strata's **Send to…** menu:
 
-- No paired, reachable devices with file sharing enabled: no sharing entry.
-- One eligible device: **Send to Pixel via KDE Connect** sends directly.
-- Multiple eligible devices: **Send via KDE Connect ▸** opens a device submenu
-  on hover or with the keyboard. Choosing a device sends to that device.
+- Every paired, reachable device with file sharing enabled appears by name in
+  a **KDE Connect** group of **Send to…**. Choosing one sends to that device.
+- Without eligible devices there is no KDE Connect group, and **Send to…**
+  disappears when nothing else offers a destination.
+- Devices that connect or disconnect while the menu is open are added or
+  withdrawn live.
 
 The entire selected file set is submitted once. No device-picker window opens.
 An accepted submission shows a brief notice; errors and uncertain submissions
@@ -49,7 +51,7 @@ retries an uncertain submission.
 Only native UTF-8 regular files are supported: no folders, symbolic links,
 background actions or remote-only files. The whole selection must be eligible;
 files are never silently omitted. Strata limits selections to 200 files and
-menus to 64 nodes, so the provider supports up to 63 devices and hides the entry
+menus to 64 nodes, so the provider supports up to 63 devices and offers none
 instead of truncating a larger list. D-Bus work has a five-second request budget.
 
 Files go to the chosen device as encoded local URIs in one
@@ -87,8 +89,8 @@ Xvfb, private session/accessibility buses and a throwaway configuration:
 ./scripts/e2e.sh tests/e2e/scenarios/test_kdeconnect_provider.py
 ```
 
-They exercise direct sending, hover and keyboard submenus, selected-device
-routing, whole-selection submission, live device removal and notice feedback.
+They exercise sending from **Send to…** with the pointer and the keyboard,
+selected-device routing, whole-selection submission, live device removal and notice feedback.
 Mock acceptance does not establish delivery to a phone. For a real transfer,
 install the provider, select disposable files, send to your chosen device, and
 verify their contents there before using it for documents.

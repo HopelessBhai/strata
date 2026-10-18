@@ -850,7 +850,7 @@
   "Select default directory": "デフォルトのディレクトリを選択",
   "Select folder (%{keys})": "フォルダーを選択（%{keys}）",
   "Select folder to exclude": "除外するフォルダーを選択",
-  "Send selected files to a paired phone, tablet or computer from the context menu.": "選択したファイルを、コンテキストメニューからペアリング済みのスマートフォン、タブレット、コンピューターに送信します。",
+  "Send selected files to a paired phone, tablet or computer from the Send to… menu.": "選択したファイルを、「送る…」メニューからペアリング済みのスマートフォン、タブレット、コンピューターに送信します。",
   "Send to": "送る",
   "Send to folder": "フォルダーに送る",
   "Send to…": "送る…",

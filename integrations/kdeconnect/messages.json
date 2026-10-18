@@ -1,8 +1,6 @@
 {
   "en": {
     "Device": "Device",
-    "Send to {device} via KDE Connect": "Send to {device} via KDE Connect",
-    "Send via KDE Connect": "Send via KDE Connect",
     "Select regular files, without folders or symbolic links.": "Select regular files, without folders or symbolic links.",
     "KDE Connect did not respond in time.": "KDE Connect did not respond in time.",
     "Too many devices to fit in Strata's device menu.": "Too many devices to fit in Strata's device menu.",
@@ -20,8 +18,6 @@
   },
   "fr": {
     "Device": "Appareil",
-    "Send to {device} via KDE Connect": "Envoyer à {device} via KDE Connect",
-    "Send via KDE Connect": "Envoyer via KDE Connect",
     "Select regular files, without folders or symbolic links.": "Sélectionnez des fichiers ordinaires, sans dossiers ni liens symboliques.",
     "KDE Connect did not respond in time.": "KDE Connect n’a pas répondu à temps.",
     "Too many devices to fit in Strata's device menu.": "Trop d’appareils pour le menu de Strata.",
@@ -39,8 +35,6 @@
   },
   "de": {
     "Device": "Gerät",
-    "Send to {device} via KDE Connect": "Über KDE Connect an {device} senden",
-    "Send via KDE Connect": "Über KDE Connect senden",
     "Select regular files, without folders or symbolic links.": "Wählen Sie reguläre Dateien ohne Ordner oder symbolische Verknüpfungen aus.",
     "KDE Connect did not respond in time.": "KDE Connect hat nicht rechtzeitig geantwortet.",
     "Too many devices to fit in Strata's device menu.": "Zu viele Geräte für das Gerätemenü von Strata.",
@@ -58,8 +52,6 @@
   },
   "es": {
     "Device": "Dispositivo",
-    "Send to {device} via KDE Connect": "Enviar a {device} mediante KDE Connect",
-    "Send via KDE Connect": "Enviar mediante KDE Connect",
     "Select regular files, without folders or symbolic links.": "Selecciona archivos normales, sin carpetas ni enlaces simbólicos.",
     "KDE Connect did not respond in time.": "KDE Connect no respondió a tiempo.",
     "Too many devices to fit in Strata's device menu.": "Hay demasiados dispositivos para el menú de Strata.",
@@ -77,8 +69,6 @@
   },
   "ja": {
     "Device": "デバイス",
-    "Send to {device} via KDE Connect": "KDE Connect で {device} に送信",
-    "Send via KDE Connect": "KDE Connect で送信",
     "Select regular files, without folders or symbolic links.": "フォルダーやシンボリックリンクを含まない通常のファイルを選択してください。",
     "KDE Connect did not respond in time.": "KDE Connect が時間内に応答しませんでした。",
     "Too many devices to fit in Strata's device menu.": "デバイスが多すぎるため Strata のメニューに表示できません。",
@@ -96,8 +86,6 @@
   },
   "pt-BR": {
     "Device": "Dispositivo",
-    "Send to {device} via KDE Connect": "Enviar para {device} via KDE Connect",
-    "Send via KDE Connect": "Enviar via KDE Connect",
     "Select regular files, without folders or symbolic links.": "Selecione arquivos comuns, sem pastas ou links simbólicos.",
     "KDE Connect did not respond in time.": "O KDE Connect não respondeu a tempo.",
     "Too many devices to fit in Strata's device menu.": "Há dispositivos demais para o menu do Strata.",
@@ -115,8 +103,6 @@
   },
   "ko": {
     "Device": "기기",
-    "Send to {device} via KDE Connect": "KDE Connect로 {device}에 보내기",
-    "Send via KDE Connect": "KDE Connect로 보내기",
     "Select regular files, without folders or symbolic links.": "폴더나 심볼릭 링크를 제외한 일반 파일을 선택하세요.",
     "KDE Connect did not respond in time.": "KDE Connect가 제시간에 응답하지 않았습니다.",
     "Too many devices to fit in Strata's device menu.": "기기가 너무 많아 Strata 메뉴에 표시할 수 없습니다.",
@@ -134,8 +120,6 @@
   },
   "vi": {
     "Device": "Thiết bị",
-    "Send to {device} via KDE Connect": "Gửi đến {device} qua KDE Connect",
-    "Send via KDE Connect": "Gửi qua KDE Connect",
     "Select regular files, without folders or symbolic links.": "Chọn tệp thông thường, không gồm thư mục hoặc liên kết tượng trưng.",
     "KDE Connect did not respond in time.": "KDE Connect không phản hồi kịp thời.",
     "Too many devices to fit in Strata's device menu.": "Có quá nhiều thiết bị để hiển thị trong trình đơn Strata.",
@@ -153,8 +137,6 @@
   },
   "it": {
     "Device": "Dispositivo",
-    "Send to {device} via KDE Connect": "Invia a {device} tramite KDE Connect",
-    "Send via KDE Connect": "Invia tramite KDE Connect",
     "Select regular files, without folders or symbolic links.": "Seleziona file normali, senza cartelle o collegamenti simbolici.",
     "KDE Connect did not respond in time.": "KDE Connect non ha risposto in tempo.",
     "Too many devices to fit in Strata's device menu.": "Troppi dispositivi per il menu di Strata.",
@@ -172,8 +154,6 @@
   },
   "ru": {
     "Device": "Устройство",
-    "Send to {device} via KDE Connect": "Отправить на {device} через KDE Connect",
-    "Send via KDE Connect": "Отправить через KDE Connect",
     "Select regular files, without folders or symbolic links.": "Выберите обычные файлы без папок и символических ссылок.",
     "KDE Connect did not respond in time.": "KDE Connect не ответил вовремя.",
     "Too many devices to fit in Strata's device menu.": "Слишком много устройств для меню Strata.",
@@ -191,8 +171,6 @@
   },
   "zh-CN": {
     "Device": "设备",
-    "Send to {device} via KDE Connect": "通过 KDE Connect 发送到 {device}",
-    "Send via KDE Connect": "通过 KDE Connect 发送",
     "Select regular files, without folders or symbolic links.": "请选择普通文件，不要包含文件夹或符号链接。",
     "KDE Connect did not respond in time.": "KDE Connect 未及时响应。",
     "Too many devices to fit in Strata's device menu.": "设备过多，无法在 Strata 菜单中显示。",
@@ -210,8 +188,6 @@
   },
   "zh-TW": {
     "Device": "裝置",
-    "Send to {device} via KDE Connect": "透過 KDE Connect 傳送到 {device}",
-    "Send via KDE Connect": "透過 KDE Connect 傳送",
     "Select regular files, without folders or symbolic links.": "請選擇一般檔案，不要包含資料夾或符號連結。",
     "KDE Connect did not respond in time.": "KDE Connect 未及時回應。",
     "Too many devices to fit in Strata's device menu.": "裝置過多，無法在 Strata 選單中顯示。",

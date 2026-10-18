@@ -71,10 +71,11 @@ class MenuTests(unittest.TestCase):
         self.backend.unavailable = True
         self.assertEqual(self.menu(), [])
 
-    def test_single_device_sends_directly_without_picker(self):
+    def test_single_device_is_a_send_to_destination(self):
         actions = self.menu()
         self.assertEqual(len(actions), 1)
-        self.assertEqual(actions[0]["label"], "Send to Pixel via KDE Connect")
+        self.assertEqual(actions[0]["label"], "Pixel")
+        self.assertEqual(actions[0]["placement"], "send-to")
         self.assertNotIn("children", actions[0])
         reply = self.activate(actions[0])
         self.assertEqual(reply["outcome"], {"status": "accepted", "accepted": 1, "total": 1})
@@ -82,12 +83,11 @@ class MenuTests(unittest.TestCase):
         self.assertEqual(self.backend.submissions, [(":1.20", "phone1", [self.file.as_uri()])])
         self.assertNotIn("delivered", reply["message"].lower())
 
-    def test_multiple_devices_submenu_routes_to_chosen_device(self):
+    def test_each_device_is_a_destination_routed_to_that_device(self):
         self.backend.devices["tablet2"] = "Tablet"
-        actions = self.menu()
-        self.assertEqual(actions[0]["label"], "Send via KDE Connect")
-        leaves = actions[0]["children"]
+        leaves = self.menu()
         self.assertEqual([a["label"] for a in leaves], ["Pixel", "Tablet"])
+        self.assertEqual({a["placement"] for a in leaves}, {"send-to"})
         self.assertEqual(self.backend.submissions, [])
         tablet = leaves[1]
         self.activate(tablet)
@@ -106,12 +106,12 @@ class MenuTests(unittest.TestCase):
 
     def test_disconnect_never_redirects_to_remaining_device(self):
         self.backend.devices["tablet2"] = "Tablet"
-        phone = self.menu()[0]["children"][0]
+        phone = self.menu()[0]
         del self.backend.devices["phone1"]
         reply = self.activate(phone)
         self.assertEqual(reply["outcome"]["status"], "rejected")
         self.assertEqual(self.backend.submissions, [])
-        self.assertEqual(self.menu()[0]["label"], "Send to Tablet via KDE Connect")
+        self.assertEqual([a["label"] for a in self.menu()], ["Tablet"])
 
     def test_service_restart_rejects_stale_target(self):
         leaf = self.menu()[0]
@@ -154,7 +154,7 @@ class MenuTests(unittest.TestCase):
 
     def test_duplicate_names_have_distinct_labels_and_targets(self):
         self.backend.devices = {"phone1": "Phone", "phone2": "Phone"}
-        leaves = self.menu()[0]["children"]
+        leaves = self.menu()
         self.assertNotEqual(leaves[0]["label"], leaves[1]["label"])
         self.activate(leaves[1])
         self.assertEqual(self.backend.submissions[0][1], "phone2")
@@ -176,15 +176,16 @@ class MenuTests(unittest.TestCase):
                 self.assertEqual(self.activate(leaf)["outcome"]["status"], "accepted")
                 self.assertEqual(self.backend.submissions[-1][1], "phone1")
         for locale, expected in (
-            ("fr_FR.UTF-8", "Envoyer via KDE Connect"),
-            ("zh_CN.UTF-8", "通过 KDE Connect 发送"),
-            ("zh_TW.UTF-8", "透過 KDE Connect 傳送"),
-            ("zh_HK.UTF-8", "透過 KDE Connect 傳送"),
+            ("fr_FR.UTF-8", "KDE Connect n’a pas répondu à temps."),
+            ("zh_CN.UTF-8", "KDE Connect 未及时响应。"),
+            ("zh_TW.UTF-8", "KDE Connect 未及時回應。"),
+            ("zh_HK.UTF-8", "KDE Connect 未及時回應。"),
         ):
             with self.subTest(locale=locale), patch.dict(os.environ, {"LC_ALL": locale}):
-                self.assertEqual(tr("Send via KDE Connect"), expected)
+                self.assertEqual(tr("KDE Connect did not respond in time."), expected)
         with patch.dict(os.environ, {"LC_ALL": "unknown"}):
-            self.assertEqual(tr("Send via KDE Connect"), "Send via KDE Connect")
+            self.assertEqual(tr("KDE Connect did not respond in time."),
+                             "KDE Connect did not respond in time.")
 
     def test_translations_keep_complete_messages_and_named_placeholders(self):
         formatter = Formatter()
@@ -234,7 +235,7 @@ class MenuTests(unittest.TestCase):
 
     def test_device_count_limit_never_produces_truncated_menu(self):
         self.backend.devices = {f"d{n}": f"Device {n}" for n in range(63)}
-        self.assertEqual(len(self.menu()[0]["children"]), 63)
+        self.assertEqual(len(self.menu()), 63)
         self.backend.devices["extra"] = "Extra"
         self.assertEqual(self.menu(), [])
 

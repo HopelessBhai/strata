@@ -850,7 +850,7 @@
   "Select default directory": "Chọn thư mục mặc định",
   "Select folder (%{keys})": "Chọn thư mục (%{keys})",
   "Select folder to exclude": "Chọn thư mục cần loại trừ",
-  "Send selected files to a paired phone, tablet or computer from the context menu.": "Gửi các tệp đã chọn tới điện thoại, máy tính bảng hoặc máy tính đã ghép đôi từ menu ngữ cảnh.",
+  "Send selected files to a paired phone, tablet or computer from the Send to… menu.": "Gửi các tệp đã chọn tới điện thoại, máy tính bảng hoặc máy tính đã ghép đôi từ menu “Gửi đến…”.",
   "Send to": "Gửi đến",
   "Send to folder": "Gửi đến thư mục",
   "Send to…": "Gửi đến…",

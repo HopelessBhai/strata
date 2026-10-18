@@ -850,7 +850,7 @@
   "Select default directory": "Select default directory",
   "Select folder (%{keys})": "Select folder (%{keys})",
   "Select folder to exclude": "Select folder to exclude",
-  "Send selected files to a paired phone, tablet or computer from the context menu.": "Send selected files to a paired phone, tablet or computer from the context menu.",
+  "Send selected files to a paired phone, tablet or computer from the Send to… menu.": "Send selected files to a paired phone, tablet or computer from the Send to… menu.",
   "Send to": "Send to",
   "Send to folder": "Send to folder",
   "Send to…": "Send to…",

@@ -210,13 +210,9 @@ class Provider:
             if counts[name] > 1:
                 name += " (" + hashlib.sha256(device.encode()).hexdigest()[:6] + ")"
             t = self.ticket(snapshot, device, paths, identities)
-            actions.append({"id": action_id(device), "label": name, "context": t.token})
-        if len(actions) == 1:
-            template = "Send to {device} via KDE Connect"
-            budget = 128 - len(tr(template, device="").encode("utf-8"))
-            actions[0]["label"] = tr(template, device=label(actions[0]["label"], budget))
-            return actions
-        return [{"id": "send", "label": tr("Send via KDE Connect"), "children": actions}]
+            actions.append({"id": action_id(device), "label": name, "placement": "send-to",
+                            "context": t.token})
+        return actions
 
     def activate(self, request, deadline):
         paths = request["paths"]

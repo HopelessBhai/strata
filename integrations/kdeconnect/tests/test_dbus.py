@@ -102,14 +102,14 @@ class PrivateBusTests(unittest.TestCase):
         self.update()
         self.await_invalidation()
         leaf = self.request()["actions"][0]
-        self.assertEqual(leaf["label"], "Send to Pixel via KDE Connect")
+        self.assertEqual((leaf["label"], leaf["placement"]), ("Pixel", "send-to"))
         self.assertEqual(self.request("activate", leaf)["outcome"]["status"], "accepted")
         self.assertEqual(self.submissions(), [{"device": "phone1", "uris": [p.as_uri() for p in self.paths],
                                                "owner": self.ready.read_text()}])
         self.devices["tablet2"] = {"name": "Tablet"}
         self.update()
         self.await_invalidation()
-        leaves = self.request()["actions"][0]["children"]
+        leaves = self.request()["actions"]
         self.assertEqual([leaf["label"] for leaf in leaves], ["Pixel", "Tablet"])
         self.assertEqual(self.request("activate", leaves[1])["outcome"]["status"], "accepted")
         self.assertEqual(self.submissions()[-1]["device"], "tablet2")
@@ -118,7 +118,7 @@ class PrivateBusTests(unittest.TestCase):
         self.await_invalidation()
         self.assertEqual(self.request("activate", leaves[1])["outcome"]["status"], "rejected")
         self.assertEqual(len(self.submissions()), 2)
-        self.assertNotIn("children", self.request()["actions"][0])
+        self.assertEqual([leaf["label"] for leaf in self.request()["actions"]], ["Pixel"])
 
     def test_service_restart_never_reuses_old_target_or_activation(self):
         self.devices = {"phone1": {"name": "Pixel"}}

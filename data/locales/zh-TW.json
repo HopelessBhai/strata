@@ -831,7 +831,7 @@
   "Select default directory": "選取預設目錄",
   "Select folder (%{keys})": "選取資料夾（%{keys}）",
   "Select folder to exclude": "選取要排除的資料夾",
-  "Send selected files to a paired phone, tablet or computer from the context menu.": "從右鍵選單將所選檔案傳送到已配對的手機、平板電腦或電腦。",
+  "Send selected files to a paired phone, tablet or computer from the Send to… menu.": "從「傳送至…」選單將所選檔案傳送到已配對的手機、平板電腦或電腦。",
   "Send to": "傳送至",
   "Send to folder": "傳送至資料夾",
   "Send to…": "傳送至…",
