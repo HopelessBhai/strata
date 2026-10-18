@@ -4,8 +4,8 @@ An optional [external file provider](../../docs/file-providers.md) that lists
 KDE Connect devices in Strata's **Send to…** menu:
 
 - Every paired, reachable device with file sharing enabled appears by name in
-  a **KDE Connect** group of **Send to…**. Choosing one sends to that device.
-- Without eligible devices there is no KDE Connect group, and **Send to…**
+  the **KDE Connect** submenu of **Send to…**. Choosing one sends to that device.
+- Without eligible devices there is no KDE Connect submenu, and **Send to…**
   disappears when nothing else offers a destination.
 - Devices that connect or disconnect while the menu is open are added or
   withdrawn live.

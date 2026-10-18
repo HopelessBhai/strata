@@ -32,7 +32,10 @@ Save this as `example/provider.json`. The id must match the directory name.
 The optional `name` supplies the human-readable menu group heading; without it,
 Strata uses the id. Names must contain non-whitespace plain text, at most 64 UTF-8
 bytes, without control characters. The optional `icon` names one of the declared
-icons and is drawn before that heading. Existing registrations need no changes.
+icons and is drawn before that heading and on the provider's **Send to…**
+submenu. Without one, that submenu uses an icon for the optional `category`
+(`cloud`, `devices`, `version-control` or `other`), which catalog installs
+record. Existing registrations need no changes.
 Commands are literal argv with an absolute executable; no shell interpolation,
 PATH lookup, placeholder expansion or working-directory executable lookup is
 performed. The child runs with `/` as its working directory. Nothing in a browsed
@@ -137,11 +140,11 @@ to appear inside Strata's **Send to…** submenu instead of the provider section
 {"version":1,"id":2,"actions":[{"id":"pixel","label":"Pixel","icon":"phone","placement":"send-to","context":"opaque-selection-token"},{"id":"tablet","label":"Tablet","icon":"tablet","placement":"send-to","context":"opaque-selection-token"}]}
 ```
 
-Removable drives keep the first, unlabelled group of **Send to…**; each provider's
-destinations follow in a group labelled with its registered name, so labels should
-be the bare destination name. **Send to…** appears as soon as any destination
-exists, including ones that arrive while the menu is open, and disappears when
-the last one is withdrawn. Destinations may have `children`, with the usual tree
+Removable drives come first in **Send to…**; each provider's destinations follow
+in a submenu named after the provider and drawn with its icon, like a drive, so
+labels should be the bare destination name. **Send to…** appears as soon as any
+destination exists, including ones that arrive while the menu is open, and
+disappears when the last one is withdrawn. Destinations may have `children`, with the usual tree
 bounds, and their leaves activate exactly like section leaves. `placement` is
 read on root actions only; it is ignored on children, on background (folder)
 menus and in menus without a Send to… entry, where the action stays in the

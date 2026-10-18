@@ -63,7 +63,9 @@ def test_devices_are_live_send_to_destinations(strata, kdeconnect):
     strata.wait(lambda: "Send to…" in strata.menu_items(), "a reachable device adds Send to…")
     assert "Pixel" not in strata.menu_items(), "devices live under Send to…"
     strata.pointer.click(strata.menu_item("Send to…"))
-    strata.wait(lambda: "Pixel" in strata.menu_items(), "device inside Send to…")
+    strata.wait(lambda: "KDE Connect" in strata.menu_items(), "KDE Connect submenu inside Send to…")
+    strata.pointer.click(strata.menu_item("KDE Connect"))
+    strata.wait(lambda: "Pixel" in strata.menu_items(), "device inside the KDE Connect submenu")
     strata.choose_menu_item("Pixel")
     strata.wait(lambda: len(kdeconnect.submissions()) == 1, "direct D-Bus submission")
     assert kdeconnect.submissions()[0]["device"] == "phone1"
@@ -73,6 +75,8 @@ def test_devices_are_live_send_to_destinations(strata, kdeconnect):
     strata.open_context_menu("todo.txt")
     strata.wait(lambda: "Send to…" in strata.menu_items(), "Send to… with one device")
     strata.pointer.click(strata.menu_item("Send to…"))
+    strata.wait(lambda: "KDE Connect" in strata.menu_items(), "KDE Connect submenu")
+    strata.pointer.click(strata.menu_item("KDE Connect"))
     strata.wait(lambda: "Pixel" in strata.menu_items(), "single device")
     kdeconnect.set({"phone1": {"name": "Pixel"}, "tablet2": {"name": "Tablet"}})
     strata.wait(lambda: "Tablet" in strata.menu_items(), "open Send to… gains a device")
@@ -110,7 +114,15 @@ def test_keyboard_send_to_sends_whole_selection_to_chosen_device(strata, kdeconn
     else:
         raise AssertionError("keyboard never reached Send to…")
     strata.keyboard.press("Right")
-    strata.wait(lambda: "Tablet" in strata.menu_items(), "keyboard opens Send to…")
+    strata.wait(lambda: "KDE Connect" in strata.menu_items(), "keyboard opens Send to…")
+    for _ in range(8):
+        if strata.menu_item("KDE Connect").has_state("focused"):
+            break
+        strata.keyboard.press("Down")
+    else:
+        raise AssertionError("keyboard never reached the KDE Connect submenu")
+    strata.keyboard.press("Right")
+    strata.wait(lambda: "Tablet" in strata.menu_items(), "keyboard opens the KDE Connect submenu")
     assert not {"Offline", "Unpaired", "Disabled"}.intersection(strata.menu_items())
     strata.keyboard.press("Home")
     for _ in range(8):

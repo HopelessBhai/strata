@@ -966,7 +966,7 @@ fn logo_tile(icon: Option<&[u8]>, category: Category) -> gtk::Widget {
     let texture = icon.and_then(|bytes| gdk::Texture::from_bytes(&glib::Bytes::from(bytes)).ok());
     let image = match texture {
         Some(texture) => gtk::Image::from_paintable(Some(&texture)),
-        None => assets::primary_icon(category_icon(category), 20),
+        None => assets::primary_icon(crate::ui::file_providers::category_icon(Some(category)), 20),
     };
     image.set_pixel_size(20);
     image.set_halign(gtk::Align::Center);
@@ -982,15 +982,6 @@ fn logo_tile(icon: Option<&[u8]>, category: Category) -> gtk::Widget {
     tile.set_valign(gtk::Align::Start);
     tile.append(&image);
     tile.upcast()
-}
-
-fn category_icon(category: Category) -> &'static str {
-    match category {
-        Category::Cloud => icons::CLOUD,
-        Category::Devices => icons::SMARTPHONE,
-        Category::VersionControl => icons::GIT_BRANCH,
-        Category::Other => icons::BLOCKS,
-    }
 }
 
 fn category_label(category: Category) -> &'static str {
